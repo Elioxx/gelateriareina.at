@@ -1,6 +1,6 @@
 /**
- * main.js — Navigation, scroll behavior, mobile menu, general UI
- * Runs after DOMContentLoaded. No dependencies.
+ * main.js — Navigation, Scroll-Verhalten, Mobile-Menü, Öffnungsstatus.
+ * Läuft nach DOMContentLoaded. Keine Abhängigkeiten.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
   initNavHighlight();
   initRevealOnScroll();
+  initOpeningStatus();
 });
 
-/* --- Sticky header --- */
+/* --- Sticky Header --- */
 function initHeader() {
   const header = document.getElementById('site-header');
   if (!header) return;
@@ -23,7 +24,7 @@ function initHeader() {
   onScroll();
 }
 
-/* --- Mobile navigation --- */
+/* --- Mobile Navigation --- */
 function initMobileNav() {
   const toggle = document.getElementById('nav-toggle');
   const mobileNav = document.getElementById('nav-mobile');
@@ -35,6 +36,7 @@ function initMobileNav() {
     mobileNav.classList.add('open');
     document.body.style.overflow = 'hidden';
     toggle.setAttribute('aria-expanded', 'true');
+    closeBtn?.focus();
   };
 
   const close = () => {
@@ -55,7 +57,7 @@ function initMobileNav() {
   });
 }
 
-/* --- Active nav link on scroll --- */
+/* --- Aktiver Nav-Link beim Scrollen --- */
 function initNavHighlight() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
@@ -77,7 +79,7 @@ function initNavHighlight() {
   sections.forEach(s => observer.observe(s));
 }
 
-/* --- Fade-in elements on scroll --- */
+/* --- Einblenden beim Scrollen --- */
 function initRevealOnScroll() {
   const els = document.querySelectorAll('[data-reveal]');
   if (!els.length) return;
@@ -95,4 +97,134 @@ function initRevealOnScroll() {
   );
 
   els.forEach(el => observer.observe(el));
+}
+
+/* =========================================================
+   Öffnungsstatus
+
+   Beantwortet die Frage, mit der die meisten Besucher kommen:
+   „Kann ich jetzt hin?" Gerechnet wird immer in Wiener Zeit —
+   sonst zeigt ein Handy im Urlaub etwas Falsches an.
+
+   Öffnungszeiten ändern: unten in OPENING_HOURS eintragen UND
+   in index.html (#kontakt + Footer) sowie data/info.json.
+   ========================================================= */
+
+/* Index = Wochentag (0 = Sonntag). null bedeutet geschlossen,
+   sonst [Öffnung, Schließung] in vollen Stunden. */
+const OPENING_HOURS = [
+  [10, 18],  // Sonntag
+  null,      // Montag
+  null,      // Dienstag
+  null,      // Mittwoch
+  [10, 18],  // Donnerstag
+  [10, 18],  // Freitag
+  [10, 18]   // Samstag
+];
+
+const WEEKDAY_NAMES = [
+  'Sonntag', 'Montag', 'Dienstag', 'Mittwoch',
+  'Donnerstag', 'Freitag', 'Samstag'
+];
+
+function initOpeningStatus() {
+  const el = document.getElementById('hero-status');
+  const now = viennaTime();
+  if (!now) return;
+
+  // Saisonbetrieb: greift nur, wenn in index.html ein Zeitraum
+  // hinterlegt ist (data-season-from / data-season-to, je "MM-TT").
+  // Ohne Angabe wird ganzjährig nach OPENING_HOURS gerechnet.
+  const outOfSeason = el && isOutOfSeason(el.dataset.seasonFrom, el.dataset.seasonTo, now);
+
+  if (el) {
+    const status = outOfSeason
+      ? { open: false, text: 'Winterpause – wir sind bald wieder für euch da' }
+      : describeStatus(now);
+
+    el.textContent = status.text;
+    el.classList.toggle('is-open', status.open);
+    el.classList.toggle('is-closed', !status.open);
+  }
+
+  // Heutige Zeile in der Öffnungszeiten-Tabelle hervorheben
+  document.querySelectorAll('.hours-row[data-days]').forEach(row => {
+    const days = row.dataset.days.split(',').map(Number);
+    row.classList.toggle('is-today', !outOfSeason && days.includes(now.day));
+  });
+}
+
+/* Aktuelle Zeit in Europe/Vienna, unabhängig von der Geräte-Zeitzone */
+function viennaTime() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Europe/Vienna',
+      weekday: 'short',
+      month: '2-digit',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }).formatToParts(new Date());
+
+    const get = type => parts.find(p => p.type === type)?.value;
+    const dayIndex = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+    return {
+      day: dayIndex[get('weekday')],
+      // hour12:false liefert je nach Engine 24 statt 0 um Mitternacht
+      hour: parseInt(get('hour'), 10) % 24,
+      minute: parseInt(get('minute'), 10),
+      month: parseInt(get('month'), 10),
+      date: parseInt(get('day'), 10)
+    };
+  } catch {
+    return null;  // Intl nicht verfügbar → Status bleibt wie im HTML
+  }
+}
+
+function describeStatus(now) {
+  const today = OPENING_HOURS[now.day];
+  const minutesNow = now.hour * 60 + now.minute;
+
+  if (today) {
+    const [from, to] = today;
+    if (minutesNow < from * 60) {
+      return { open: false, text: `Heute ab ${from} Uhr geöffnet` };
+    }
+    if (minutesNow < to * 60) {
+      return { open: true, text: `Jetzt geöffnet · bis ${to} Uhr` };
+    }
+  }
+
+  // Nächsten offenen Tag suchen (max. eine Woche voraus)
+  for (let step = 1; step <= 7; step++) {
+    const day = (now.day + step) % 7;
+    const hours = OPENING_HOURS[day];
+    if (!hours) continue;
+
+    const when = step === 1 ? 'morgen' : `am ${WEEKDAY_NAMES[day]}`;
+    return { open: false, text: `Heute geschlossen · ${when} ab ${hours[0]} Uhr` };
+  }
+
+  return { open: false, text: 'Aktuell geschlossen' };
+}
+
+/* "MM-TT"-Zeitraum, der über den Jahreswechsel gehen darf */
+function isOutOfSeason(from, to, now) {
+  if (!from || !to) return false;
+
+  const toNum = value => {
+    const [m, d] = String(value).split('-').map(Number);
+    return Number.isFinite(m) && Number.isFinite(d) ? m * 100 + d : null;
+  };
+
+  const start = toNum(from);
+  const end = toNum(to);
+  const today = now.month * 100 + now.date;
+  if (start === null || end === null) return false;
+
+  return start <= end
+    ? today < start || today > end      // Saison innerhalb eines Jahres
+    : today < start && today > end;     // Saison über den Jahreswechsel
 }

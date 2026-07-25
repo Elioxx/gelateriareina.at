@@ -1,48 +1,46 @@
 {
+  "_hinweis": "color = Farbe der Eiskugel auf der Website. Möglichst nah an der echten Sorte wählen; sehr helle Farben sind in Ordnung, die Kugel bekommt im CSS einen feinen Rand.",
   "categories": [
     {
       "id": "klassiker",
       "name": "Klassiker",
       "description": "Zeitlose Sorten, die immer passen",
-      "icon": "◆",
       "flavors": [
-        { "name": "Schokolade", "description": "Dunkle belgische Schokolade", "vegan": true },
-        { "name": "Vanille", "description": "Bourbon-Vanille aus Madagaskar", "vegan": false },
-        { "name": "Stracciatella", "description": "Milcheis mit feinen Schokoladesplittern", "vegan": false },
-        { "name": "Haselnuss", "description": "Piemontesische Haselnüsse", "vegan": false },
-        { "name": "Pistazie", "description": "Sizilianische Bronte-Pistazie", "vegan": false }
+        { "name": "Schokolade",    "description": "Dunkle belgische Schokolade",           "color": "#4A2C1D", "vegan": true },
+        { "name": "Vanille",       "description": "Bourbon-Vanille aus Madagaskar",        "color": "#F2E3BE", "vegan": false },
+        { "name": "Stracciatella", "description": "Milcheis mit feinen Schokoladesplittern","color": "#EDE4D4", "vegan": false },
+        { "name": "Haselnuss",     "description": "Piemontesische Haselnüsse",             "color": "#B98A5E", "vegan": false },
+        { "name": "Pistazie",      "description": "Sizilianische Bronte-Pistazie",         "color": "#9CB173", "vegan": false }
       ]
     },
     {
       "id": "frucht",
       "name": "Fruchtsorten",
       "description": "Erfrischend leicht, voller Fruchtgeschmack",
-      "icon": "◈",
       "flavors": [
-        { "name": "Erdbeere", "description": "Frische Saisonerdbeeren", "vegan": true },
-        { "name": "Zitrone", "description": "Sizilianische Biozitronen, cremig-frisch", "vegan": true },
-        { "name": "Mango", "description": "Reife Alphonso-Mango", "vegan": true },
-        { "name": "Himbeere", "description": "Wildsammlung aus der Region", "vegan": true },
-        { "name": "Maracuja", "description": "Tropische Passionsfrucht", "vegan": true }
+        { "name": "Erdbeere",  "description": "Frische Saisonerdbeeren",              "color": "#E8788D", "vegan": true },
+        { "name": "Zitrone",   "description": "Sizilianische Biozitronen, cremig-frisch", "color": "#F6E27A", "vegan": true },
+        { "name": "Mango",     "description": "Reife Alphonso-Mango",                 "color": "#F2A93C", "vegan": true },
+        { "name": "Himbeere",  "description": "Wildsammlung aus der Region",          "color": "#CE4C6E", "vegan": true },
+        { "name": "Maracuja",  "description": "Tropische Passionsfrucht",             "color": "#F5B93E", "vegan": true }
       ]
     },
     {
       "id": "spezialitaeten",
       "name": "Spezialitäten",
       "description": "Unsere Eigenkreationen der Saison",
-      "icon": "◇",
       "flavors": [
-        { "name": "Tiramisu", "description": "Mascarpone, Espresso, Savoiardi", "vegan": false },
-        { "name": "Amaretto", "description": "Mandeleis mit Bittermandelaroma", "vegan": false },
-        { "name": "Kokos", "description": "Cremiges Kokosmilcheis", "vegan": true },
-        { "name": "Joghurt", "description": "Natürlich-frisches Joghurteis", "vegan": false },
-        { "name": "Walnuss & Honig", "description": "Steirische Walnüsse, Blütenhonig", "vegan": false }
+        { "name": "Tiramisu",         "description": "Mascarpone, Espresso, Savoiardi", "color": "#C8A379", "vegan": false },
+        { "name": "Amaretto",         "description": "Mandeleis mit Bittermandelaroma", "color": "#E6CCA2", "vegan": false },
+        { "name": "Kokos",            "description": "Cremiges Kokosmilcheis",          "color": "#F7F1E4", "vegan": true },
+        { "name": "Joghurt",          "description": "Natürlich-frisches Joghurteis",   "color": "#FCFAF4", "vegan": false },
+        { "name": "Walnuss & Honig",  "description": "Steirische Walnüsse, Blütenhonig","color": "#C99A5B", "vegan": false }
       ]
     }
   ],
   "extras": [
     { "name": "Eiskaffee", "note": "Espresso & Vanilleeis" },
-    { "name": "Affogato", "note": "Doppelter Espresso über Eis" },
+    { "name": "Affogato",  "note": "Doppelter Espresso über Eis" },
     { "name": "Eisbecher", "note": "Hauskreation mit Toppings" }
   ],
   "note": "Alle Sorten täglich frisch hergestellt. Saisonales Angebot kann variieren."

@@ -4,26 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Gelateria Reina – Hausgemachtes Gelato in Gleisdorf. Täglich frisch zubereitetes Eis aus besten Zutaten. Do–So 10–18 Uhr.">
-  <meta name="theme-color" content="#FAFAF7">
+  <meta name="theme-color" content="#FBF9F5">
 
-  <!-- Open Graph -->
+  <!-- Open Graph — die Seite wird vor allem über Facebook geteilt -->
   <meta property="og:title" content="Gelateria Reina – Hausgemachtes Gelato Gleisdorf">
-  <meta property="og:description" content="Täglich frisch zubereitetes Eis aus besten Zutaten. Weizer Str. 4, 8200 Gleisdorf.">
+  <meta property="og:description" content="Täglich frisch zubereitetes Eis aus besten Zutaten. Weizer Straße 4, 8200 Gleisdorf.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="de_AT">
+  <meta property="og:url" content="https://gelateriareina.at/">
+  <meta property="og:image" content="https://gelateriareina.at/assets/images/hero-eisdiele-front.webp">
+  <meta property="og:image:alt" content="Die Gelateria Reina in Gleisdorf an einem Sommertag.">
 
   <title>Gelateria Reina – Hausgemachtes Gelato Gleisdorf</title>
 
-  <!-- Hero-Standbild vorladen: liegt hinter dem Hintergrund-Video und ist
-       sichtbar, solange das Video noch nicht spielt (LCP-Element) -->
+  <!-- Hero-Foto vorladen: es ist das LCP-Element der Seite -->
   <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
 
-  <!-- Hintergrund-Video im Hero (youtube-nocookie): Verbindung früh aufbauen,
-       aber ohne preload — das Standbild behält Priorität. -->
-  <link rel="preconnect" href="https://www.youtube-nocookie.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
+  <!-- Schriften: Fraunces (Display) + Karla (Fließtext).
+       Als <link> statt @import in der CSS — spart eine Rundreise. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,400&display=swap">
 
-  <!-- CSS: base must come first (defines variables used by others) -->
+  <!-- CSS: base.css zuerst (definiert alle Custom Properties) -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/hero.css">
@@ -32,17 +35,22 @@
   <link rel="stylesheet" href="css/contact.css">
 
   <style>
-    /* Reveal animation — defined here to avoid a 6th CSS file for 4 rules */
-    [data-reveal] {
+    /* Einblenden beim Scrollen. Bewusst an .js gekoppelt: ohne
+       JavaScript wird nichts versteckt, sonst bliebe die halbe
+       Seite unsichtbar, falls ein Skript nicht lädt. */
+    .js [data-reveal] {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(18px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+                  transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
-    [data-reveal].revealed {
-      opacity: 1;
-      transform: none;
+    .js [data-reveal].revealed { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js [data-reveal] { opacity: 1; transform: none; }
     }
   </style>
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 
 <body>
@@ -53,6 +61,11 @@
   <header class="site-header" id="site-header" role="banner">
     <div class="container">
       <a href="#home" class="site-logo" aria-label="Gelateria Reina – zur Startseite">
+        <!-- Eistüte, abgeleitet vom goldenen Zeichen auf dem Ladenschild -->
+        <svg class="site-logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2.4c3.63 0 6.3 2.5 6.3 5.5 0 .55-.09 1.08-.26 1.58H5.96A4.9 4.9 0 0 1 5.7 7.9c0-3 2.67-5.5 6.3-5.5Z"/>
+          <path d="M6.5 11.1h11l-4.6 10.06a1 1 0 0 1-1.82 0L6.5 11.1Z"/>
+        </svg>
         Gelateria <span>Reina</span>
       </a>
 
@@ -71,13 +84,13 @@
     </div>
   </header>
 
-  <!-- Mobile nav overlay -->
+  <!-- Mobile-Navigation (--i staffelt den Auftritt, siehe layout.css) -->
   <div class="nav-mobile" id="nav-mobile" role="dialog" aria-modal="true" aria-label="Navigation">
     <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Menü schließen">✕</button>
-    <a href="#sorten" class="nav-link">Sorten</a>
-    <a href="#ueber-uns" class="nav-link">Über uns</a>
-    <a href="#galerie" class="nav-link">Galerie</a>
-    <a href="#kontakt" class="nav-link">Kontakt</a>
+    <a href="#sorten"    class="nav-link" style="--i:0">Sorten</a>
+    <a href="#ueber-uns" class="nav-link" style="--i:1">Über uns</a>
+    <a href="#galerie"   class="nav-link" style="--i:2">Galerie</a>
+    <a href="#kontakt"   class="nav-link" style="--i:3">Kontakt</a>
   </div>
 
 
@@ -85,36 +98,36 @@
 
     <!-- ===================================================
          HERO — Startseite
+
+         Das Ladenfoto trägt die Fläche in voller Deckkraft; der
+         Verlauf (.hero-scrim) deckt nur so viel ab, wie der Text
+         zum Lesen braucht. Struktur und Ausschnitt: css/hero.css
          =================================================== -->
     <section class="hero" id="home" aria-label="Startseite">
 
-      <!-- Hintergrund-Video, formatfüllend (Struktur + Skalierung: css/hero.css).
-           Reine Dekoration: aria-hidden, pointer-events: none, tabindex -1 —
-           Klicks und Tastaturfokus gehen immer an den Hero-Inhalt.
-           YouTube erlaubt autoplay nur stummgeschaltet (mute=1); loop=1 braucht
-           zusätzlich playlist=<video-id>. youtube-nocookie: kein Tracking-Cookie.
-           Das Standbild darunter (.hero-fallback) trägt die Fläche, bis das
-           Video läuft – und bleibt bei reduzierter Bewegung dauerhaft sichtbar. -->
-      <div class="hero-video-wrap" aria-hidden="true">
-        <div class="hero-fallback"></div>
-        <iframe
-          class="hero-video"
-          src="https://www.youtube-nocookie.com/embed/53C8ecrirbI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=53C8ecrirbI&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;disablekb=1&amp;playsinline=1"
-          title="Gelateria Reina – Impressionen aus dem Lokal"
-          tabindex="-1"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+      <div class="hero-media">
+        <img class="hero-img"
+             src="assets/images/hero-eisdiele-front.webp"
+             width="2000" height="1334"
+             fetchpriority="high" decoding="async"
+             alt="Die Gelateria Reina in Gleisdorf: Gäste vor dem Eingang unter dem goldenen Schriftzug an einem Sommertag.">
       </div>
 
-      <!-- Dunkler Verlauf zwischen Video und Text: hält Titel, Fließtext und
-           Button lesbar, egal welches Frame gerade läuft. -->
-      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-scrim" aria-hidden="true"></div>
 
-      <div class="container">
+      <div class="container hero-inner">
         <div class="hero-content">
-          <div class="hero-eyebrow">
-            <span class="t-label">Gelateria Reina · Gleisdorf</span>
-          </div>
+
+          <!-- Öffnungsstatus. Text und Zustandsklasse setzt
+               js/main.js → initOpeningStatus() in Wiener Zeit.
+               Der hier hinterlegte Text ist der Rückfall, falls
+               kein JavaScript läuft — deshalb muss er immer
+               stimmen (die veröffentlichten Zeiten).
+
+               Saisonpause: data-season-from="03-01" und
+               data-season-to="10-31" ergänzen (Format MM-TT),
+               dann meldet die Seite außerhalb Winterpause. -->
+          <p class="hero-status" id="hero-status">Do – So · 10 – 18 Uhr</p>
 
           <h1 class="hero-title">
             Echt.<br>
@@ -128,13 +141,14 @@
           </p>
 
           <div class="hero-actions">
-            <a href="#sorten" class="btn btn--outline">Unsere Sorten</a>
-            <span class="hero-detail">Do – So &nbsp;10 – 18 Uhr</span>
+            <a href="#sorten" class="btn btn--primary">Sorten ansehen</a>
+            <a href="#kontakt" class="btn btn--ghost">So findest du uns</a>
           </div>
         </div>
       </div>
 
       <div class="hero-scroll" aria-hidden="true">
+        <span>Mehr</span>
         <div class="hero-scroll-arrow"></div>
       </div>
     </section>
@@ -142,23 +156,20 @@
 
     <!-- ===================================================
          SPEISEKARTE — Sorten
-         Inhalt wird dynamisch aus data/menu.json geladen (js/menu.js)
+         Inhalt kommt aus data/menu.json (js/menu.js).
+         Jede Sorte trägt dort ihre Farbe für die Eiskugel.
          =================================================== -->
     <section class="section menu-section" id="sorten" aria-label="Speisekarte">
       <div class="container">
         <header class="section-header" data-reveal>
           <span class="t-label">Speisekarte</span>
-          <h2 class="t-h2">Unsere Sorten</h2>
+          <h2 class="t-h2">Ein Blick in die <em>Vitrine</em></h2>
           <p>Frisch zubereitet, täglich wechselnd – immer mit den besten Zutaten der Saison.</p>
         </header>
 
-        <!-- Tabs werden von menu.js befüllt -->
+        <!-- Tabs, Panels und Extras werden von menu.js befüllt -->
         <div class="menu-tabs" id="menu-tabs" role="tablist" aria-label="Eissorte wählen"></div>
-
-        <!-- Panels werden von menu.js befüllt -->
         <div id="menu-panels"></div>
-
-        <!-- Extras werden von menu.js befüllt -->
         <div id="menu-extras"></div>
       </div>
     </section>
@@ -172,7 +183,7 @@
         <div class="about-grid">
           <div class="about-content" data-reveal>
             <span class="t-label">Unsere Geschichte</span>
-            <h2 class="t-h2">Leidenschaft für echtes Gelato</h2>
+            <h2 class="t-h2">Leidenschaft für <em>echtes</em> Gelato</h2>
             <div class="divider"></div>
             <p class="about-body">
               In unserer Gelateria steht Qualität an erster Stelle. Jede Sorte wird nach
@@ -180,12 +191,14 @@
               ausgewählten Zutaten und ohne künstliche Aromen. Wir glauben daran, dass
               gutes Eis Zeit braucht und Liebe verdient.
             </p>
+            <!-- Das öffnende Anführungszeichen setzt about.css als
+                 großes Schmuckzeichen (.about-highlight::before) -->
             <blockquote class="about-highlight">
-              „Frisch gemacht. Täglich neu."
+              Frisch gemacht. Täglich neu.
             </blockquote>
           </div>
 
-          <div class="about-visual">
+          <div class="about-visual" data-reveal>
             <img class="about-img-main"
                  src="assets/images/ueber-uns-eisverkauf.webp"
                  width="1200" height="1500" loading="lazy" decoding="async"
@@ -207,13 +220,14 @@
       <div class="container">
         <header class="section-header" data-reveal>
           <span class="t-label">Einblicke</span>
-          <h2 class="t-h2">Galerie</h2>
+          <h2 class="t-h2">Bei uns im <em>Laden</em></h2>
         </header>
 
-        <!-- Mosaik aus 4 Bildern. Die Flächen sind bewusst unterschiedlich groß:
-             ein breites Panorama, ein hohes Hochformat als Anker rechts, zwei
-             kleinere Kacheln darunter. Reihenfolge erzählt: innen → Gäste →
-             Übergabe → Andrang. Grid-Bereiche: siehe .gallery-item--* in about.css -->
+        <!-- Mosaik aus 4 Bildern mit bewusst ungleichen Flächen:
+             breites Panorama, hohes Hochformat als Anker rechts,
+             zwei kleinere Kacheln darunter. Reihenfolge erzählt:
+             innen → Gäste → Übergabe → Andrang.
+             Rasterplätze: .gallery-item--* in about.css -->
         <div class="gallery-grid" data-reveal>
 
           <figure class="gallery-item gallery-item--wide">
@@ -265,32 +279,41 @@
       <div class="container">
         <div class="contact-grid">
 
-          <!-- Info -->
           <div class="contact-info" data-reveal>
             <span class="t-label">Besuche uns</span>
             <h2 class="t-h2">Kontakt &amp;<br>Öffnungszeiten</h2>
 
-            <!-- Öffnungszeiten -->
+            <!-- data-days = Wochentage der Zeile (0 = Sonntag).
+                 js/main.js hebt darüber die heutige Zeile hervor. -->
             <div class="hours-list" aria-label="Öffnungszeiten">
-              <div class="hours-row">
-                <span class="hours-days">Montag – Mittwoch</span>
+              <div class="hours-row" data-days="1,2,3">
+                <span class="hours-days">
+                  Montag – Mittwoch
+                  <span class="hours-today-tag">heute</span>
+                </span>
                 <span class="hours-time hours-time--closed">Geschlossen</span>
               </div>
-              <div class="hours-row">
-                <span class="hours-days">Donnerstag – Freitag</span>
-                <span class="hours-time">10:00 – 18:00 Uhr</span>
+              <div class="hours-row" data-days="4,5">
+                <span class="hours-days">
+                  Donnerstag – Freitag
+                  <span class="hours-today-tag">heute</span>
+                </span>
+                <span class="hours-time">10:00 – 18:00</span>
               </div>
-              <div class="hours-row">
-                <span class="hours-days">Samstag – Sonntag</span>
-                <span class="hours-time">10:00 – 18:00 Uhr</span>
+              <div class="hours-row" data-days="6,0">
+                <span class="hours-days">
+                  Samstag – Sonntag
+                  <span class="hours-today-tag">heute</span>
+                </span>
+                <span class="hours-time">10:00 – 18:00</span>
               </div>
             </div>
             <p class="hours-season-note">
-              ℹ Saisonbetrieb – aktuelle Öffnungszeiten bitte auf Facebook prüfen.
+              <span aria-hidden="true">ℹ</span>
+              Saisonbetrieb – aktuelle Öffnungszeiten bitte auf Facebook prüfen.
             </p>
 
-            <!-- Kontaktdaten -->
-            <div class="contact-details" style="margin-top: var(--space-8)">
+            <div class="contact-details">
               <div class="contact-item">
                 <div class="contact-item-icon" aria-hidden="true">📍</div>
                 <div class="contact-item-body">
@@ -312,7 +335,6 @@
               </div>
             </div>
 
-            <!-- Social -->
             <div class="social-links">
               <a href="https://www.facebook.com/GelateriaReina/" target="_blank" rel="noopener" class="social-link" aria-label="Gelateria Reina auf Facebook">
                 Facebook
@@ -320,7 +342,6 @@
             </div>
           </div>
 
-          <!-- Karte -->
           <div class="contact-map" data-reveal>
             <iframe
               class="map-frame"
@@ -351,7 +372,13 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#home" class="site-logo">Gelateria <span>Reina</span></a>
+          <a href="#home" class="site-logo">
+            <svg class="site-logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2.4c3.63 0 6.3 2.5 6.3 5.5 0 .55-.09 1.08-.26 1.58H5.96A4.9 4.9 0 0 1 5.7 7.9c0-3 2.67-5.5 6.3-5.5Z"/>
+              <path d="M6.5 11.1h11l-4.6 10.06a1 1 0 0 1-1.82 0L6.5 11.1Z"/>
+            </svg>
+            Gelateria <span>Reina</span>
+          </a>
           <p>Hausgemachtes Gelato aus Gleisdorf, täglich frisch und mit Leidenschaft zubereitet.</p>
         </div>
 
@@ -365,20 +392,19 @@
           <h4>Kontakt</h4>
           <p>Weizer Straße 4<br>8200 Gleisdorf</p>
           <a href="tel:+436649235042">+43 664 9235042</a>
-          <br>
           <a href="https://www.facebook.com/GelateriaReina/" target="_blank" rel="noopener">Facebook</a>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <span>© <span id="footer-year">2024</span> Gelateria Reina</span>
+        <span>© <span id="footer-year">2026</span> Gelateria Reina</span>
         <span>Weizer Straße 4, 8200 Gleisdorf</span>
       </div>
     </div>
   </footer>
 
 
-  <!-- JS: main.js first (nav/scroll), then menu.js (requires DOM) -->
+  <!-- JS: main.js zuerst (Nav, Scroll, Öffnungsstatus), dann menu.js -->
   <script src="js/main.js"></script>
   <script src="js/menu.js"></script>
   <script>

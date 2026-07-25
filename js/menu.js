@@ -1,6 +1,9 @@
 /**
- * menu.js — Fetches data/menu.json and renders the Speisekarte section dynamically.
- * Tabs + flavor cards + extras. Depends on #menu-tabs, #menu-panels, #menu-extras.
+ * menu.js — Lädt data/menu.json und rendert die Speisekarte.
+ * Tabs + Sortenkarten + Extras. Erwartet #menu-tabs, #menu-panels, #menu-extras.
+ *
+ * Jede Sorte trägt ihre Farbe als CSS-Variable --scoop; das Aussehen
+ * der Kugel steckt komplett in css/menu.css → .flavor-scoop.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,6 +27,24 @@ async function loadMenu() {
   }
 }
 
+/* --- Hilfsfunktionen ---------------------------------------------- */
+
+/* Inhalte aus der JSON landen per innerHTML im DOM — Sonderzeichen
+   maskieren, damit ein & oder < im Sortennamen das Markup nicht bricht. */
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/* Nur echte Hex-Farben durchlassen — alles andere fällt auf die
+   Standardfarbe aus css/menu.css zurück. */
+function scoopColor(color) {
+  return /^#[0-9a-f]{3,8}$/i.test(String(color || '')) ? color : null;
+}
+
+/* --- Rendering ----------------------------------------------------- */
+
 function renderTabs(categories) {
   const container = document.getElementById('menu-tabs');
   if (!container) return;
@@ -32,11 +53,11 @@ function renderTabs(categories) {
     .map(
       (cat, i) =>
         `<button class="menu-tab${i === 0 ? ' active' : ''}"
-           data-tab="${cat.id}"
-           aria-controls="panel-${cat.id}"
+           data-tab="${esc(cat.id)}"
+           aria-controls="panel-${esc(cat.id)}"
            aria-selected="${i === 0}"
            role="tab">
-          ${cat.name}
+          ${esc(cat.name)}
         </button>`
     )
     .join('');
@@ -56,7 +77,15 @@ function activateTab(id) {
   });
 
   document.querySelectorAll('.menu-panel').forEach(panel => {
-    panel.classList.toggle('active', panel.id === `panel-${id}`);
+    const active = panel.id === `panel-${id}`;
+    panel.classList.toggle('active', active);
+
+    // Ein verstecktes Panel löst keinen IntersectionObserver aus. Beim
+    // Umschalten deshalb sofort einblenden, statt auf den Beobachter zu
+    // warten — sonst blitzt das Raster beim Tab-Wechsel kurz leer auf.
+    if (active) {
+      panel.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
+    }
   });
 }
 
@@ -65,34 +94,40 @@ function renderPanels(categories) {
   if (!container) return;
 
   container.innerHTML = categories
-    .map(
-      (cat, i) => `
-      <div class="menu-panel${i === 0 ? ' active' : ''}" id="panel-${cat.id}" role="tabpanel">
+    .map((cat, i) => {
+      const count = cat.flavors?.length || 0;
+      return `
+      <div class="menu-panel${i === 0 ? ' active' : ''}" id="panel-${esc(cat.id)}" role="tabpanel">
         <div class="menu-category-header" data-reveal>
-          <div class="menu-category-icon">${cat.icon}</div>
-          <p class="menu-category-desc">${cat.description}</p>
+          <p class="menu-category-desc">${esc(cat.description)}</p>
+          <span class="menu-category-count">${count} Sorten</span>
         </div>
         <div class="flavor-grid" data-reveal>
-          ${cat.flavors.map(renderFlavorCard).join('')}
+          ${(cat.flavors || []).map(renderFlavorCard).join('')}
         </div>
-      </div>`
-    )
+      </div>`;
+    })
     .join('');
 
   initRevealAfterRender();
 }
 
-function renderFlavorCard(flavor) {
-  const badge = flavor.vegan
-    ? '<span class="flavor-badge">vegan</span>'
-    : '';
+function renderFlavorCard(flavor, index) {
+  const badge = flavor.vegan ? '<span class="flavor-badge">vegan</span>' : '';
+  const color = scoopColor(flavor.color);
+
+  // --i steuert die gestaffelte Einblendung (css/menu.css)
+  const style = `--i:${index}` + (color ? `;--scoop:${color}` : '');
 
   return `
-    <div class="flavor-card">
-      <div class="flavor-name">${flavor.name}</div>
-      <div class="flavor-desc">${flavor.description}</div>
-      ${badge}
-    </div>`;
+    <article class="flavor-card" style="${style}">
+      <span class="flavor-scoop" aria-hidden="true"></span>
+      <div class="flavor-body">
+        <h3 class="flavor-name">${esc(flavor.name)}</h3>
+        <p class="flavor-desc">${esc(flavor.description)}</p>
+        ${badge}
+      </div>
+    </article>`;
 }
 
 function renderExtras(extras, note) {
@@ -101,21 +136,21 @@ function renderExtras(extras, note) {
 
   container.innerHTML = `
     <div class="menu-extras" data-reveal>
-      <span class="t-label">Außerdem</span>
+      <span class="t-label">Außerdem bei uns</span>
       <div class="extras-grid">
         ${extras.map(e => `
           <div class="extra-item">
-            <div class="extra-name">${e.name}</div>
-            <div class="extra-note">${e.note}</div>
+            <div class="extra-name">${esc(e.name)}</div>
+            <div class="extra-note">${esc(e.note)}</div>
           </div>`).join('')}
       </div>
-      ${note ? `<p class="menu-note">${note}</p>` : ''}
+      ${note ? `<p class="menu-note">${esc(note)}</p>` : ''}
     </div>`;
 
   initRevealAfterRender();
 }
 
-/* Re-observe newly inserted [data-reveal] elements */
+/* Neu eingefügte [data-reveal]-Elemente nachträglich beobachten */
 function initRevealAfterRender() {
   document.querySelectorAll('[data-reveal]:not(.observed)').forEach(el => {
     el.classList.add('observed');

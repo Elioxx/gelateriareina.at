@@ -9,14 +9,18 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: var(--space-6) 0;
-  transition: background var(--transition), padding var(--transition), box-shadow var(--transition);
+  padding: var(--space-5) 0;
+  transition: background var(--transition), padding var(--transition),
+              box-shadow var(--transition), border-color var(--transition);
+  border-bottom: 1px solid transparent;
 }
 
 .site-header.scrolled {
-  background: rgba(250, 250, 247, 0.96);
-  backdrop-filter: blur(8px);
-  padding: var(--space-4) 0;
+  background: rgba(251, 249, 245, 0.88);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  padding: var(--space-3) 0;
+  border-bottom-color: var(--c-border);
   box-shadow: var(--shadow-sm);
 }
 
@@ -24,32 +28,47 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-6);
 }
 
-/* Ohne .scrolled steht der Header immer über dem dunklen Hero-Video —
-   dort muss er hell sein. Ab 40px Scroll übernimmt .scrolled (cremiger
-   Hintergrund) wieder die Standardfarben aus den Regeln unten. */
+/* Ohne .scrolled steht der Header über dem dunklen Hero-Foto und
+   muss hell sein. Ab 40px Scroll übernimmt .scrolled die
+   Standardfarben aus den Regeln weiter unten. */
 .site-header:not(.scrolled) .site-logo,
 .site-header:not(.scrolled) .nav-link:hover,
-.site-header:not(.scrolled) .nav-link.active {
-  color: var(--c-white);
-}
-.site-header:not(.scrolled) .site-logo span { color: var(--c-accent-bright); }
-.site-header:not(.scrolled) .nav-link { color: rgba(255, 255, 255, 0.72); }
+.site-header:not(.scrolled) .nav-link.active { color: var(--c-white); }
+.site-header:not(.scrolled) .site-logo span  { color: var(--c-accent-bright); }
+.site-header:not(.scrolled) .site-logo-mark  { color: var(--c-accent-bright); }
+.site-header:not(.scrolled) .nav-link        { color: rgba(255, 255, 255, 0.75); }
 .site-header:not(.scrolled) .nav-toggle span { background: var(--c-white); }
 
-/* Logo */
+/* --- Logo --- */
 .site-logo {
-  font-family: var(--f-serif);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--f-display);
   font-size: var(--text-xl);
   font-weight: 400;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.01em;
+  line-height: 1;
   color: var(--c-text);
-  transition: color var(--transition);
+  transition: color var(--transition), opacity var(--transition);
 }
-.site-logo span { color: var(--c-accent); }
+.site-logo:hover { opacity: 0.8; }
+.site-logo span { color: var(--c-accent); font-style: italic; }
 
-/* Nav */
+/* Eistüte, abgeleitet vom goldenen Zeichen auf dem Ladenschild */
+.site-logo-mark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--c-accent);
+  transition: color var(--transition), transform var(--transition);
+}
+.site-logo:hover .site-logo-mark { transform: rotate(-8deg); }
+
+/* --- Nav --- */
 .site-nav {
   display: flex;
   align-items: center;
@@ -57,37 +76,36 @@
 }
 
 .nav-link {
+  position: relative;
   font-family: var(--f-sans);
   font-size: var(--text-sm);
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--c-text-muted);
-  position: relative;
+  padding-block: var(--space-1);
   transition: color var(--transition);
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  bottom: -2px;
   left: 0;
   width: 0;
-  height: 1px;
+  height: 2px;
+  border-radius: var(--radius-pill);
   background: var(--c-accent);
   transition: width var(--transition);
 }
 
 .nav-link:hover,
-.nav-link.active {
-  color: var(--c-text);
-}
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 100%;
-}
+.nav-link.active { color: var(--c-text); }
 
-/* Mobile menu toggle */
+.nav-link:hover::after,
+.nav-link.active::after { width: 100%; }
+
+/* --- Mobile-Toggle --- */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -96,51 +114,68 @@
 }
 .nav-toggle span {
   display: block;
-  width: 22px;
-  height: 1px;
+  width: 24px;
+  height: 2px;
+  border-radius: var(--radius-pill);
   background: var(--c-text);
   transition: var(--transition);
 }
 
-/* Mobile nav overlay */
+/* --- Mobile-Nav --- */
 .nav-mobile {
   display: none;
   position: fixed;
   inset: 0;
-  background: var(--c-bg);
   z-index: 99;
+  background: var(--c-bg);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-8);
+  gap: var(--space-6);
 }
 
 .nav-mobile.open { display: flex; }
 
 .nav-mobile .nav-link {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: var(--text-3xl);
-  font-weight: 300;
+  font-weight: 400;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--c-text);
+  /* Gestaffelter Auftritt — --i steht im Markup */
+  animation: nav-item-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms + 60ms);
+}
+.nav-mobile .nav-link::after { height: 2px; bottom: 2px; }
+
+@keyframes nav-item-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
 }
 
 .nav-mobile-close {
   position: absolute;
-  top: var(--space-6);
-  right: var(--space-6);
-  font-size: var(--text-2xl);
+  top: var(--space-5);
+  right: var(--space-5);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+  font-size: var(--text-lg);
   color: var(--c-text-muted);
-  transition: color var(--transition);
+  transition: color var(--transition), border-color var(--transition);
 }
-.nav-mobile-close:hover { color: var(--c-text); }
+.nav-mobile-close:hover { color: var(--c-text); border-color: var(--c-text); }
 
 /* --- Footer --- */
 .site-footer {
-  background: var(--c-text);
-  color: var(--c-bg-soft);
-  padding: var(--space-16) 0 var(--space-8);
+  background: var(--c-ink);
+  color: rgba(255, 255, 255, 0.62);
+  padding: var(--space-20) 0 var(--space-8);
 }
 
 .footer-grid {
@@ -148,47 +183,51 @@
   grid-template-columns: 2fr 1fr 1fr;
   gap: var(--space-12);
   padding-bottom: var(--space-12);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   margin-bottom: var(--space-8);
 }
 
 .footer-brand .site-logo {
-  color: var(--c-bg);
+  color: var(--c-white);
   margin-bottom: var(--space-4);
 }
+.footer-brand .site-logo span,
+.footer-brand .site-logo-mark { color: var(--c-accent-bright); }
 
 .footer-brand p {
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.45);
-  max-width: 260px;
-  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.48);
+  max-width: 280px;
+  line-height: 1.75;
 }
 
 .footer-col h4 {
   font-family: var(--f-sans);
   font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--c-accent);
+  color: var(--c-accent-bright);
   margin-bottom: var(--space-4);
 }
 
 .footer-col p,
 .footer-col a {
+  display: block;
   font-size: var(--text-sm);
-  color: rgba(255,255,255,0.55);
-  line-height: 2;
+  color: rgba(255, 255, 255, 0.58);
+  line-height: 1.9;
   transition: color var(--transition);
 }
-.footer-col a:hover { color: var(--c-bg); }
+.footer-col a:hover { color: var(--c-white); }
 
 .footer-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-4);
   font-size: var(--text-xs);
-  color: rgba(255,255,255,0.25);
+  color: rgba(255, 255, 255, 0.30);
 }
 
 /* --- Responsive --- */

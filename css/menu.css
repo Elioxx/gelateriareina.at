@@ -1,52 +1,36 @@
 /* =========================================================
-   menu.css — Speisekarte / Sorten Section
+   menu.css — Speisekarte / Sorten
+
+   Leitbild: die Vitrine. Jede Sorte trägt ihre echte Gelato-
+   Farbe als Kugel (--scoop, kommt aus data/menu.json über
+   js/menu.js). Die Farbe ist keine Deko — sie zeigt, wie die
+   Kugel aussieht, und macht die Liste auf einen Blick lesbar.
    ========================================================= */
 
-.menu-section {
-  background: var(--c-bg);
-}
+.menu-section { background: var(--c-bg); }
 
-.section-header {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto var(--space-16);
-}
-
-.section-header .t-label {
-  display: block;
-  margin-bottom: var(--space-4);
-}
-
-.section-header .t-h2 {
-  margin-bottom: var(--space-4);
-}
-
-.section-header p {
-  color: var(--c-text-muted);
-  font-size: var(--text-base);
-}
-
-/* Category tabs */
+/* --- Kategorie-Tabs --- */
 .menu-tabs {
   display: flex;
   justify-content: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-10);
   flex-wrap: wrap;
 }
 
 .menu-tab {
-  padding: 0.5rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   font-family: var(--f-sans);
   font-size: var(--text-sm);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--c-text-muted);
-  border: 1px solid var(--c-border);
-  border-radius: 0;
-  transition: all var(--transition);
   background: transparent;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-pill);
+  transition: color var(--transition), background var(--transition),
+              border-color var(--transition), box-shadow var(--transition);
 }
 
 .menu-tab:hover {
@@ -55,74 +39,108 @@
 }
 
 .menu-tab.active {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
-  color: var(--c-white);
+  background: var(--c-text);
+  border-color: var(--c-text);
+  color: var(--c-bg);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Category panels */
+/* --- Panels --- */
 .menu-panel { display: none; }
 .menu-panel.active { display: block; }
 
-/* Category description */
+/* Kopfzeile je Kategorie: Beschreibung + Anzahl.
+   Die Anzahl ist echte Information — die früheren Rauten-Icons
+   waren nur Schmuck und sind deshalb weg. */
 .menu-category-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
   margin-bottom: var(--space-10);
-}
-
-.menu-category-icon {
-  font-size: var(--text-2xl);
-  color: var(--c-accent);
-  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+  text-align: center;
 }
 
 .menu-category-desc {
-  font-size: var(--text-sm);
-  color: var(--c-text-muted);
+  font-family: var(--f-display);
+  font-size: var(--text-lg);
   font-style: italic;
+  font-weight: 300;
+  color: var(--c-text-muted);
 }
 
-/* Flavor grid */
+.menu-category-count {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--c-accent-light);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+/* --- Vitrine: Sortenraster --- */
 .flavor-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: var(--space-4);
 }
 
 .flavor-card {
-  padding: var(--space-6) var(--space-6);
+  --scoop: var(--c-accent-light);  /* Rückfallfarbe, falls in der
+                                      JSON keine Farbe gesetzt ist */
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5);
   background: var(--c-bg-card);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  transition: all var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.flavor-card::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--c-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition), box-shadow var(--transition),
+              transform var(--transition);
 }
 
 .flavor-card:hover {
   border-color: var(--c-accent-light);
+  border-color: color-mix(in srgb, var(--scoop) 60%, var(--c-border));
   box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
-.flavor-card:hover::before { transform: scaleX(1); }
+
+/* Die Kugel. Der radiale Verlauf setzt ein Glanzlicht oben links,
+   damit die Fläche als Kugel liest und nicht als Punkt. Der innere
+   Ring hält auch sehr helle Sorten (Kokos, Joghurt) sichtbar. */
+.flavor-scoop {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.12) 38%,
+      rgba(255, 255, 255, 0) 62%),
+    var(--scoop);
+  box-shadow:
+    inset 0 0 0 1px rgba(33, 26, 21, 0.10),
+    inset 0 -6px 12px -6px rgba(33, 26, 21, 0.28),
+    0 4px 10px -4px rgba(33, 26, 21, 0.30);
+  transition: transform var(--transition);
+}
+
+.flavor-card:hover .flavor-scoop { transform: scale(1.07) rotate(-4deg); }
+
+.flavor-body { min-width: 0; }
 
 .flavor-name {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: var(--text-xl);
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 1.2;
   color: var(--c-text);
   margin-bottom: var(--space-1);
 }
@@ -130,22 +148,36 @@
 .flavor-desc {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .flavor-badge {
   display: inline-block;
   margin-top: var(--space-3);
-  padding: 2px 8px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  border: 1px solid var(--c-accent-light);
-  color: var(--c-accent);
-  border-radius: 100px;
+  color: #5F7A48;
+  background: rgba(143, 168, 114, 0.14);
+  border: 1px solid rgba(143, 168, 114, 0.35);
+  border-radius: var(--radius-pill);
 }
 
-/* Extras section */
+/* Gestaffeltes Einblenden der Karten — die Verzögerung setzt
+   js/menu.js je Karte als --i. */
+.flavor-grid.revealed .flavor-card {
+  animation: flavor-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+@keyframes flavor-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- Extras --- */
 .menu-extras {
   margin-top: var(--space-16);
   padding-top: var(--space-12);
@@ -153,21 +185,28 @@
   text-align: center;
 }
 
+.menu-extras .t-label { display: block; margin-bottom: var(--space-8); }
+
 .extras-grid {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-  margin-top: var(--space-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  max-width: 780px;
+  margin-inline: auto;
 }
 
 .extra-item {
-  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  background: var(--c-bg-soft);
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
+.extra-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
 .extra-name {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: var(--text-lg);
+  font-weight: 500;
   margin-bottom: var(--space-1);
 }
 
@@ -186,7 +225,10 @@
 
 /* --- Responsive --- */
 @media (max-width: 640px) {
-  .flavor-grid { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
-  .flavor-card { padding: var(--space-4); }
-  .extras-grid { flex-direction: column; align-items: center; }
+  /* Einspaltig statt zweispaltig: die Kugel plus zwei Textzeilen
+     brauchen die Breite, sonst bricht jeder Sortenname um. */
+  .flavor-grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .flavor-card { padding: var(--space-4); gap: var(--space-3); }
+  .flavor-scoop { width: 44px; height: 44px; }
+  .menu-category-header { gap: var(--space-3); }
 }

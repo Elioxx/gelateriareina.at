@@ -1,65 +1,91 @@
 /* =========================================================
-   base.css — CSS Custom Properties, Reset, Typography
-   All design tokens live here. Import this first.
+   base.css — Design Tokens, Reset, Typografie
+   ZUERST laden: alle anderen Stylesheets setzen die hier
+   definierten Custom Properties voraus.
+
+   Die Schriften werden in index.html per <link> geladen, nicht
+   mehr per @import — ein @import in der ersten CSS-Datei
+   verzögert das Rendering zusätzlich um eine Rundreise.
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
-
-/* --- Design Tokens --- */
 :root {
-  /* Colors */
-  --c-bg:           #FAFAF7;
-  --c-bg-soft:      #F3EDE6;
-  --c-bg-card:      #FFFFFF;
-  --c-text:         #1A1818;
-  --c-text-muted:   #8A7E76;
-  --c-accent:       #B8935A;
-  --c-accent-hover: #9E7B45;
-  --c-accent-light: #EAD9C4;
-  /* Aufgehelltes Gold für dunkle Flächen (Hero-Video, Header darüber) —
-     --c-accent wirkt dort zu stumpf */
-  --c-accent-bright: #DDB877;
-  --c-border:       #E0D5CB;
-  --c-white:        #FFFFFF;
+  /* --- Farben -------------------------------------------------
+     Hergeleitet vom Ladenschild: goldene Eistüte auf Schwarz,
+     dazu die warme Fassade und das Honigholz der Türen.
+     Das Gold ist die bestehende Markenfarbe und bleibt. */
+  --c-bg:            #FBF9F5;  /* warmes Papierweiß, Seitengrund   */
+  --c-bg-soft:       #F2EBE0;  /* warmer Sand, abwechselnde Sections */
+  --c-bg-card:       #FFFFFF;
+  --c-text:          #211A15;  /* warmes Schwarz statt Neutralgrau  */
+  --c-text-muted:    #7D7168;
+  --c-accent:        #B8935A;  /* Gold vom Schild, CTA-Farbe        */
+  --c-accent-hover:  #9C7A44;
+  --c-accent-light:  #EBDCC4;
+  --c-accent-bright: #E3C384;  /* aufgehelltes Gold auf dunklem Grund */
+  --c-border:        #E3D9CD;
+  --c-ink:           #17110D;  /* Hero-Scrim und Footer             */
+  --c-pistachio:     #8FA872;  /* zweite Markenfarbe, siehe Vitrine */
+  --c-white:         #FFFFFF;
 
-  /* Typography */
-  --f-serif:  'Cormorant Garamond', Georgia, serif;
-  --f-sans:   'Inter', system-ui, sans-serif;
+  /* --- Schrift ------------------------------------------------
+     Fraunces: warme Serife mit weichen Endungen und optischer
+     Größenachse — trägt die Persönlichkeit der Seite.
+     Karla: Grotesk mit eigenem Charakter (v.a. in den Ziffern),
+     bewusst nicht die übliche Systemschrift. */
+  --f-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --f-sans:    'Karla', system-ui, -apple-system, sans-serif;
+  --f-serif:   var(--f-display);  /* Altname, weiter gültig */
 
-  /* Scale */
+  /* --- Typo-Skala --------------------------------------------
+     Ab --text-3xl fluid: skaliert mit dem Viewport, damit
+     Überschriften am Handy nicht überlaufen. */
   --text-xs:   0.75rem;
   --text-sm:   0.875rem;
-  --text-base: 1rem;
-  --text-lg:   1.125rem;
+  --text-base: 1.0625rem;
+  --text-lg:   1.1875rem;
   --text-xl:   1.375rem;
   --text-2xl:  1.75rem;
-  --text-3xl:  2.25rem;
-  --text-4xl:  3rem;
-  --text-5xl:  4rem;
+  --text-3xl:  clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+  --text-4xl:  clamp(2.5rem, 1.6rem + 3.6vw, 3.75rem);
+  --text-5xl:  clamp(3rem, 1.6rem + 5.6vw, 5rem);
 
-  /* Spacing */
+  /* --- Abstände --- */
   --space-1:  0.25rem;
   --space-2:  0.5rem;
   --space-3:  0.75rem;
   --space-4:  1rem;
+  --space-5:  1.25rem;
   --space-6:  1.5rem;
   --space-8:  2rem;
+  --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
   --space-24: 6rem;
   --space-32: 8rem;
 
-  /* Sections */
-  --section-padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 5rem);
-  --max-width: 1100px;
+  /* --- Sections --- */
+  --section-padding: clamp(4.5rem, 9vw, 8rem) clamp(1.5rem, 6vw, 5rem);
+  --max-width: 1180px;
+  /* Höhe des fixen Headers — Ankersprünge dürfen nicht darunter landen */
+  --header-offset: 5.5rem;
 
-  /* Effects */
-  --radius-sm: 2px;
-  --radius:    4px;
-  --radius-lg: 8px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow:    0 4px 16px rgba(0,0,0,0.08);
-  --transition: 0.25s ease;
+  /* --- Effekte ---
+     Etwas weichere Radien als zuvor: passt zum Produkt und nimmt
+     dem Raster die Härte, ohne verspielt zu werden. */
+  --radius-sm:   3px;
+  --radius:      8px;
+  --radius-lg:   18px;
+  --radius-pill: 999px;
+
+  /* Schatten warm getönt statt neutralschwarz — auf cremigem
+     Grund wirkt neutrales Grau schmutzig. */
+  --shadow-sm: 0 1px 2px rgba(33, 26, 21, 0.05);
+  --shadow:    0 10px 30px -12px rgba(33, 26, 21, 0.18);
+  --shadow-lg: 0 26px 60px -20px rgba(33, 26, 21, 0.28);
+
+  --transition:      0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s  cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Reset --- */
@@ -69,33 +95,90 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background-color: var(--c-bg);
   color: var(--c-text);
   font-family: var(--f-sans);
-  font-weight: 300;
+  font-size: var(--text-base);
+  font-weight: 400;
   line-height: 1.7;
+  /* Verhindert seitliches Scrollen, falls ein Element überhängt */
+  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 ul, ol { list-style: none; }
-button { cursor: pointer; border: none; background: none; font: inherit; }
+button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
 
-/* --- Typography Utilities --- */
-.t-serif     { font-family: var(--f-serif); }
-.t-display   { font-family: var(--f-serif); font-size: var(--text-5xl); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; }
-.t-h1        { font-family: var(--f-serif); font-size: var(--text-4xl); font-weight: 400; line-height: 1.15; }
-.t-h2        { font-family: var(--f-serif); font-size: var(--text-3xl); font-weight: 400; line-height: 1.2; }
-.t-h3        { font-family: var(--f-serif); font-size: var(--text-2xl); font-weight: 400; }
-.t-h4        { font-family: var(--f-serif); font-size: var(--text-xl); font-weight: 400; }
-.t-label     { font-family: var(--f-sans); font-size: var(--text-xs); font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--c-accent); }
-.t-body      { font-size: var(--text-base); line-height: 1.75; }
-.t-muted     { color: var(--c-text-muted); }
+/* Ankersprünge landen sonst hinter dem fixen Header */
+section[id] { scroll-margin-top: var(--header-offset); }
 
-/* --- Layout Utilities --- */
+/* Sichtbarer Tastaturfokus — gilt für alles, überall */
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--c-accent-light);
+  color: var(--c-text);
+}
+
+/* --- Typografie-Utilities --- */
+.t-serif { font-family: var(--f-display); }
+
+.t-display {
+  font-family: var(--f-display);
+  font-size: var(--text-5xl);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.t-h1 {
+  font-family: var(--f-display);
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.t-h2 {
+  font-family: var(--f-display);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.t-h3 { font-family: var(--f-display); font-size: var(--text-2xl); font-weight: 500; line-height: 1.25; }
+.t-h4 { font-family: var(--f-display); font-size: var(--text-xl);  font-weight: 500; }
+
+/* Kursiv gesetzte Akzentwörter in Überschriften */
+.t-h1 em, .t-h2 em, .t-display em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--c-accent);
+}
+
+.t-label {
+  font-family: var(--f-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.t-body  { font-size: var(--text-base); line-height: 1.75; }
+.t-muted { color: var(--c-text-muted); }
+
+/* --- Layout-Utilities --- */
 .container {
   width: 100%;
   max-width: var(--max-width);
@@ -103,52 +186,90 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   padding-inline: clamp(1.5rem, 5vw, 4rem);
 }
 
-.section {
-  padding: var(--section-padding);
-}
+.section { padding: var(--section-padding); }
+.section--soft { background-color: var(--c-bg-soft); }
 
-.section--soft {
-  background-color: var(--c-bg-soft);
+/* Gemeinsamer Kopf aller Sections (Eyebrow + H2 + Fließtext) */
+.section-header {
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto var(--space-16);
 }
+.section-header .t-label { display: block; margin-bottom: var(--space-4); }
+.section-header .t-h2    { margin-bottom: var(--space-4); }
+.section-header p        { color: var(--c-text-muted); }
 
-/* --- Divider --- */
+/* --- Trenner --- */
 .divider {
-  width: 40px;
-  height: 1px;
+  width: 48px;
+  height: 2px;
   background: var(--c-accent);
+  border-radius: var(--radius-pill);
   margin: var(--space-6) 0;
 }
 .divider--center { margin-inline: auto; }
 
-/* --- Button --- */
+/* --- Buttons --- */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
-  padding: 0.75rem 2rem;
+  padding: 0.85rem 2rem;
   font-family: var(--f-sans);
   font-size: var(--text-sm);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: var(--transition);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), transform var(--transition),
+              box-shadow var(--transition);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* Gefüllt, gold — die eine Hauptaktion je Section */
+.btn--primary {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-white);
+  box-shadow: var(--shadow-sm);
+}
+.btn--primary:hover {
+  background: var(--c-accent-hover);
+  border-color: var(--c-accent-hover);
+  box-shadow: var(--shadow);
 }
 
+/* Umrandet — Nebenaktionen */
 .btn--outline {
-  border: 1px solid var(--c-text);
+  border-color: var(--c-text);
   color: var(--c-text);
 }
-.btn--outline:hover { background: var(--c-text); color: var(--c-white); }
+.btn--outline:hover { background: var(--c-text); color: var(--c-bg); }
 
 .btn--accent {
-  border: 1px solid var(--c-accent);
+  border-color: var(--c-accent);
   color: var(--c-accent);
 }
 .btn--accent:hover { background: var(--c-accent); color: var(--c-white); }
 
-/* --- Responsive breakpoints (use in other files) ---
-   sm:  640px
-   md:  768px
-   lg:  1024px
-   xl:  1280px
-   -------------------------------------------------- */
+/* --- Reduzierte Bewegung ---
+   Gilt global, nicht nur im Hero: wer das System entsprechend
+   eingestellt hat, bekommt keine Übergänge und keine Sprünge. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn:hover { transform: none; }
+}
+
+/* --- Responsive Breakpoints (in den anderen Dateien verwenden) ---
+   sm: 640px · md: 768px · lg: 1024px · xl: 1280px
+   ---------------------------------------------------------------- */

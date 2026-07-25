@@ -1,0 +1,192 @@
+/* =========================================================
+   menu.css — Speisekarte / Sorten Section
+   ========================================================= */
+
+.menu-section {
+  background: var(--c-bg);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto var(--space-16);
+}
+
+.section-header .t-label {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.section-header .t-h2 {
+  margin-bottom: var(--space-4);
+}
+
+.section-header p {
+  color: var(--c-text-muted);
+  font-size: var(--text-base);
+}
+
+/* Category tabs */
+.menu-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.menu-tab {
+  padding: 0.5rem 1.5rem;
+  font-family: var(--f-sans);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  border: 1px solid var(--c-border);
+  border-radius: 0;
+  transition: all var(--transition);
+  background: transparent;
+}
+
+.menu-tab:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.menu-tab.active {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-white);
+}
+
+/* Category panels */
+.menu-panel { display: none; }
+.menu-panel.active { display: block; }
+
+/* Category description */
+.menu-category-header {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.menu-category-icon {
+  font-size: var(--text-2xl);
+  color: var(--c-accent);
+  margin-bottom: var(--space-3);
+}
+
+.menu-category-desc {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* Flavor grid */
+.flavor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.flavor-card {
+  padding: var(--space-6) var(--space-6);
+  background: var(--c-bg-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.flavor-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--c-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.flavor-card:hover {
+  border-color: var(--c-accent-light);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+.flavor-card:hover::before { transform: scaleX(1); }
+
+.flavor-name {
+  font-family: var(--f-serif);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--c-text);
+  margin-bottom: var(--space-1);
+}
+
+.flavor-desc {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  line-height: 1.5;
+}
+
+.flavor-badge {
+  display: inline-block;
+  margin-top: var(--space-3);
+  padding: 2px 8px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--c-accent-light);
+  color: var(--c-accent);
+  border-radius: 100px;
+}
+
+/* Extras section */
+.menu-extras {
+  margin-top: var(--space-16);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--c-border);
+  text-align: center;
+}
+
+.extras-grid {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  margin-top: var(--space-8);
+}
+
+.extra-item {
+  text-align: center;
+}
+
+.extra-name {
+  font-family: var(--f-serif);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-1);
+}
+
+.extra-note {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+.menu-note {
+  text-align: center;
+  margin-top: var(--space-10);
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .flavor-grid { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .flavor-card { padding: var(--space-4); }
+  .extras-grid { flex-direction: column; align-items: center; }
+}

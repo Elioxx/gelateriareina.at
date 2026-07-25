@@ -1,0 +1,49 @@
+{
+  "categories": [
+    {
+      "id": "klassiker",
+      "name": "Klassiker",
+      "description": "Zeitlose Sorten, die immer passen",
+      "icon": "◆",
+      "flavors": [
+        { "name": "Schokolade", "description": "Dunkle belgische Schokolade", "vegan": true },
+        { "name": "Vanille", "description": "Bourbon-Vanille aus Madagaskar", "vegan": false },
+        { "name": "Stracciatella", "description": "Milcheis mit feinen Schokoladesplittern", "vegan": false },
+        { "name": "Haselnuss", "description": "Piemontesische Haselnüsse", "vegan": false },
+        { "name": "Pistazie", "description": "Sizilianische Bronte-Pistazie", "vegan": false }
+      ]
+    },
+    {
+      "id": "frucht",
+      "name": "Fruchtsorten",
+      "description": "Erfrischend leicht, voller Fruchtgeschmack",
+      "icon": "◈",
+      "flavors": [
+        { "name": "Erdbeere", "description": "Frische Saisonerdbeeren", "vegan": true },
+        { "name": "Zitrone", "description": "Sizilianische Biozitronen, cremig-frisch", "vegan": true },
+        { "name": "Mango", "description": "Reife Alphonso-Mango", "vegan": true },
+        { "name": "Himbeere", "description": "Wildsammlung aus der Region", "vegan": true },
+        { "name": "Maracuja", "description": "Tropische Passionsfrucht", "vegan": true }
+      ]
+    },
+    {
+      "id": "spezialitaeten",
+      "name": "Spezialitäten",
+      "description": "Unsere Eigenkreationen der Saison",
+      "icon": "◇",
+      "flavors": [
+        { "name": "Tiramisu", "description": "Mascarpone, Espresso, Savoiardi", "vegan": false },
+        { "name": "Amaretto", "description": "Mandeleis mit Bittermandelaroma", "vegan": false },
+        { "name": "Kokos", "description": "Cremiges Kokosmilcheis", "vegan": true },
+        { "name": "Joghurt", "description": "Natürlich-frisches Joghurteis", "vegan": false },
+        { "name": "Walnuss & Honig", "description": "Steirische Walnüsse, Blütenhonig", "vegan": false }
+      ]
+    }
+  ],
+  "extras": [
+    { "name": "Eiskaffee", "note": "Espresso & Vanilleeis" },
+    { "name": "Affogato", "note": "Doppelter Espresso über Eis" },
+    { "name": "Eisbecher", "note": "Hauskreation mit Toppings" }
+  ],
+  "note": "Alle Sorten täglich frisch hergestellt. Saisonales Angebot kann variieren."
+}

@@ -1,0 +1,174 @@
+/* =========================================================
+   contact.css — Kontakt & Öffnungszeiten Section
+   ========================================================= */
+
+.contact-section {
+  background: var(--c-bg-soft);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: start;
+}
+
+/* --- Info column --- */
+.contact-info .t-label {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.contact-info .t-h2 {
+  margin-bottom: var(--space-8);
+}
+
+/* Hours table */
+.hours-list {
+  margin-bottom: var(--space-10);
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--c-border);
+  font-size: var(--text-sm);
+}
+
+.hours-row:first-child { border-top: 1px solid var(--c-border); }
+
+.hours-days { color: var(--c-text-muted); }
+
+.hours-time {
+  font-family: var(--f-serif);
+  font-size: var(--text-base);
+  color: var(--c-text);
+}
+
+.hours-time--closed {
+  color: var(--c-text-muted);
+  font-style: italic;
+  font-family: var(--f-sans);
+  font-size: var(--text-sm);
+}
+
+.hours-season-note {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  font-style: italic;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* Contact details */
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.contact-item {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.contact-item-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--c-accent);
+  font-size: 14px;
+}
+
+.contact-item-body {}
+
+.contact-item-label {
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  margin-bottom: 2px;
+}
+
+.contact-item-value {
+  font-size: var(--text-base);
+  color: var(--c-text);
+  line-height: 1.5;
+}
+
+.contact-item-value a {
+  transition: color var(--transition);
+}
+.contact-item-value a:hover { color: var(--c-accent); }
+
+/* Social links */
+.social-links {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--c-border);
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  transition: all var(--transition);
+  border-radius: var(--radius-sm);
+}
+.social-link:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+/* --- Map column --- */
+.contact-map {
+  position: sticky;
+  top: 7rem;
+}
+
+.map-frame {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: none;
+  border-radius: var(--radius-sm);
+  filter: saturate(0.7) contrast(1.05);
+  display: block;
+}
+
+.map-caption {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-align: center;
+}
+
+.map-caption a {
+  color: var(--c-accent);
+  transition: color var(--transition);
+}
+.map-caption a:hover { color: var(--c-accent-hover); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-map {
+    position: static;
+    order: -1;
+  }
+}

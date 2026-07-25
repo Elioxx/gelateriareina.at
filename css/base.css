@@ -1,0 +1,151 @@
+/* =========================================================
+   base.css — CSS Custom Properties, Reset, Typography
+   All design tokens live here. Import this first.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
+
+/* --- Design Tokens --- */
+:root {
+  /* Colors */
+  --c-bg:           #FAFAF7;
+  --c-bg-soft:      #F3EDE6;
+  --c-bg-card:      #FFFFFF;
+  --c-text:         #1A1818;
+  --c-text-muted:   #8A7E76;
+  --c-accent:       #B8935A;
+  --c-accent-hover: #9E7B45;
+  --c-accent-light: #EAD9C4;
+  --c-border:       #E0D5CB;
+  --c-white:        #FFFFFF;
+
+  /* Typography */
+  --f-serif:  'Cormorant Garamond', Georgia, serif;
+  --f-sans:   'Inter', system-ui, sans-serif;
+
+  /* Scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+  --text-3xl:  2.25rem;
+  --text-4xl:  3rem;
+  --text-5xl:  4rem;
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Sections */
+  --section-padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 5rem);
+  --max-width: 1100px;
+
+  /* Effects */
+  --radius-sm: 2px;
+  --radius:    4px;
+  --radius-lg: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow:    0 4px 16px rgba(0,0,0,0.08);
+  --transition: 0.25s ease;
+}
+
+/* --- Reset --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--f-sans);
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* --- Typography Utilities --- */
+.t-serif     { font-family: var(--f-serif); }
+.t-display   { font-family: var(--f-serif); font-size: var(--text-5xl); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; }
+.t-h1        { font-family: var(--f-serif); font-size: var(--text-4xl); font-weight: 400; line-height: 1.15; }
+.t-h2        { font-family: var(--f-serif); font-size: var(--text-3xl); font-weight: 400; line-height: 1.2; }
+.t-h3        { font-family: var(--f-serif); font-size: var(--text-2xl); font-weight: 400; }
+.t-h4        { font-family: var(--f-serif); font-size: var(--text-xl); font-weight: 400; }
+.t-label     { font-family: var(--f-sans); font-size: var(--text-xs); font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--c-accent); }
+.t-body      { font-size: var(--text-base); line-height: 1.75; }
+.t-muted     { color: var(--c-text-muted); }
+
+/* --- Layout Utilities --- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.section {
+  padding: var(--section-padding);
+}
+
+.section--soft {
+  background-color: var(--c-bg-soft);
+}
+
+/* --- Divider --- */
+.divider {
+  width: 40px;
+  height: 1px;
+  background: var(--c-accent);
+  margin: var(--space-6) 0;
+}
+.divider--center { margin-inline: auto; }
+
+/* --- Button --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.75rem 2rem;
+  font-family: var(--f-sans);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: var(--transition);
+}
+
+.btn--outline {
+  border: 1px solid var(--c-text);
+  color: var(--c-text);
+}
+.btn--outline:hover { background: var(--c-text); color: var(--c-white); }
+
+.btn--accent {
+  border: 1px solid var(--c-accent);
+  color: var(--c-accent);
+}
+.btn--accent:hover { background: var(--c-accent); color: var(--c-white); }
+
+/* --- Responsive breakpoints (use in other files) ---
+   sm:  640px
+   md:  768px
+   lg:  1024px
+   xl:  1280px
+   -------------------------------------------------- */

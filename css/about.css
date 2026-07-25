@@ -1,0 +1,194 @@
+/* =========================================================
+   about.css — Über uns & Galerie Section
+   ========================================================= */
+
+/* --- Über uns --- */
+.about-section {
+  background: var(--c-bg-soft);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 7rem);
+  align-items: center;
+}
+
+.about-content .t-label {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.about-content .t-h2 {
+  margin-bottom: var(--space-6);
+}
+
+.about-content .divider { margin: var(--space-6) 0; }
+
+.about-body {
+  font-size: var(--text-base);
+  color: var(--c-text-muted);
+  line-height: 1.85;
+  margin-bottom: var(--space-8);
+}
+
+.about-highlight {
+  font-family: var(--f-serif);
+  font-size: var(--text-2xl);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--c-accent);
+  line-height: 1.4;
+  padding-left: var(--space-6);
+  border-left: 2px solid var(--c-accent);
+}
+
+/* About visual — image stack */
+.about-visual {
+  position: relative;
+  aspect-ratio: 4/5;
+}
+
+.about-img-main {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.about-img-accent {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 55%;
+  height: 50%;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 4px solid var(--c-bg-soft);
+}
+
+/* Placeholder versions */
+.about-img-placeholder {
+  background: linear-gradient(135deg, var(--c-accent-light) 0%, var(--c-bg) 100%);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-img-placeholder::after {
+  content: 'Foto';
+  font-family: var(--f-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  opacity: 0.4;
+}
+
+.about-img-main.about-img-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  height: 80%;
+}
+
+.about-img-accent.about-img-placeholder {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 55%;
+  height: 50%;
+  border: 4px solid var(--c-bg-soft);
+}
+
+/* --- Galerie --- */
+.gallery-section {
+  background: var(--c-bg);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 260px 260px;
+  gap: var(--space-3);
+}
+
+/* Mosaic layout */
+.gallery-item:nth-child(1) { grid-column: span 5; grid-row: span 1; }
+.gallery-item:nth-child(2) { grid-column: span 4; grid-row: span 1; }
+.gallery-item:nth-child(3) { grid-column: span 3; grid-row: span 2; }
+.gallery-item:nth-child(4) { grid-column: span 4; grid-row: span 1; }
+.gallery-item:nth-child(5) { grid-column: span 5; grid-row: span 1; }
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  position: relative;
+  background: var(--c-accent-light);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover img { transform: scale(1.05); }
+
+/* Placeholder gallery items */
+.gallery-item--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--c-accent-light), var(--c-bg-soft));
+}
+.gallery-item--placeholder::after {
+  content: 'Foto';
+  font-family: var(--f-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  opacity: 0.4;
+}
+
+/* Instagram-style overlay */
+.gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 24, 24, 0);
+  transition: background var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-item:hover .gallery-item-overlay {
+  background: rgba(26, 24, 24, 0.25);
+}
+
+/* Facebook follow prompt */
+.gallery-cta {
+  text-align: center;
+  margin-top: var(--space-10);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .about-visual { display: none; }
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  .gallery-item { grid-column: span 1 !important; grid-row: span 1 !important; height: 200px; }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-item { height: 220px; }
+}

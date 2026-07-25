@@ -1,0 +1,26 @@
+{
+  "name": "Gelateria Reina",
+  "tagline": "Hausgemachtes Eis aus Gleisdorf",
+  "about": {
+    "headline": "Leidenschaft für echtes Gelato",
+    "text": "In unserer Gelateria steht Qualität an erster Stelle. Jede Sorte wird nach traditionellen italienischen Rezepturen täglich frisch zubereitet – mit ausgewählten Zutaten und ohne künstliche Aromen. Wir glauben daran, dass gutes Eis Zeit braucht und Liebe verdient.",
+    "highlight": "Frisch gemacht. Täglich neu."
+  },
+  "contact": {
+    "address": {
+      "street": "Weizer Straße 4",
+      "city": "8200 Gleisdorf",
+      "country": "Österreich"
+    },
+    "phone": "+43 664 9235042",
+    "email": "",
+    "facebook": "https://www.facebook.com/GelateriaReina/"
+  },
+  "hours": [
+    { "days": "Montag – Mittwoch", "time": "Geschlossen" },
+    { "days": "Donnerstag – Freitag", "time": "10:00 – 18:00 Uhr" },
+    { "days": "Samstag – Sonntag", "time": "10:00 – 18:00 Uhr" }
+  ],
+  "seasonNote": "Saisonbetrieb – bitte aktuelle Öffnungszeiten auf Facebook prüfen.",
+  "mapQuery": "Weizer+Stra%C3%9Fe+4,+8200+Gleisdorf,+Austria"
+}

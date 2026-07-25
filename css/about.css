@@ -22,51 +22,32 @@
   margin-bottom: var(--space-8);
 }
 
-/* Zitat: hängendes Anführungszeichen in Gold, Text in der
-   Display-Schrift — der eine betonte Satz der Section. */
+/* Zitat — der eine betonte Satz der Section.
+   Hier stand ein großes „ als Schmuckzeichen: Fraunces setzt das
+   Glyph auf der Grundlinie, es rutschte unter den Text und sah aus
+   wie ein verirrtes Komma-Paar. Jetzt tragen die Anführungszeichen
+   im Text selbst die Auszeichnung, der Goldbalken den Rest. */
 .about-highlight {
-  position: relative;
   font-family: var(--f-display);
   font-size: var(--text-2xl);
   font-weight: 300;
   font-style: italic;
   line-height: 1.35;
   color: var(--c-text);
-  padding-left: var(--space-8);
+  padding-left: var(--space-6);
   border-left: 2px solid var(--c-accent);
 }
 
-.about-highlight::before {
-  content: '„';
-  position: absolute;
-  left: var(--space-3);
-  top: -0.35em;
-  font-size: 2.6em;
-  line-height: 1;
-  color: var(--c-accent-light);
-  pointer-events: none;
-}
-
 /* --- Bildstapel ---
-   Hauptbild oben links, kleineres Bild unten rechts darüber,
-   dazu ein versetzter Goldrahmen als Tiefenebene. */
+   Hauptbild oben links, kleineres Bild unten rechts darüber. */
 .about-visual {
   position: relative;
   aspect-ratio: 4 / 5;
 }
 
-.about-visual::before {
-  content: '';
-  position: absolute;
-  top: var(--space-6);
-  left: var(--space-6);
-  width: 80%;
-  height: 80%;
-  border: 1px solid var(--c-accent);
-  border-radius: var(--radius-lg);
-  opacity: 0.45;
-  pointer-events: none;
-}
+/* Hier lag ein versetzter Goldrahmen als Tiefenebene — vom Hauptbild
+   verdeckt blieb davon nur ein dünner Strich am Rand übrig, der wie
+   ein Darstellungsfehler aussah. Ersatzlos entfernt. */
 
 .about-img-main {
   position: relative;

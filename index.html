@@ -17,6 +17,8 @@
 
   <title>Gelateria Reina – Hausgemachtes Gelato Gleisdorf</title>
 
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
   <!-- Hero-Foto vorladen: es ist das LCP-Element der Seite -->
   <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
 
@@ -61,11 +63,6 @@
   <header class="site-header" id="site-header" role="banner">
     <div class="container">
       <a href="#home" class="site-logo" aria-label="Gelateria Reina – zur Startseite">
-        <!-- Eistüte, abgeleitet vom goldenen Zeichen auf dem Ladenschild -->
-        <svg class="site-logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 2.4c3.63 0 6.3 2.5 6.3 5.5 0 .55-.09 1.08-.26 1.58H5.96A4.9 4.9 0 0 1 5.7 7.9c0-3 2.67-5.5 6.3-5.5Z"/>
-          <path d="M6.5 11.1h11l-4.6 10.06a1 1 0 0 1-1.82 0L6.5 11.1Z"/>
-        </svg>
         Gelateria <span>Reina</span>
       </a>
 
@@ -191,10 +188,8 @@
               ausgewählten Zutaten und ohne künstliche Aromen. Wir glauben daran, dass
               gutes Eis Zeit braucht und Liebe verdient.
             </p>
-            <!-- Das öffnende Anführungszeichen setzt about.css als
-                 großes Schmuckzeichen (.about-highlight::before) -->
             <blockquote class="about-highlight">
-              Frisch gemacht. Täglich neu.
+              „Frisch gemacht. Täglich neu."
             </blockquote>
           </div>
 
@@ -314,8 +309,15 @@
             </p>
 
             <div class="contact-details">
+              <!-- Icons als Inline-SVG statt Emoji: Emoji sehen auf jedem
+                   Betriebssystem anders aus und fehlen auf manchen ganz. -->
               <div class="contact-item">
-                <div class="contact-item-icon" aria-hidden="true">📍</div>
+                <div class="contact-item-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                    <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" stroke-linejoin="round"/>
+                    <circle cx="12" cy="10" r="2.6"/>
+                  </svg>
+                </div>
                 <div class="contact-item-body">
                   <div class="contact-item-label">Adresse</div>
                   <div class="contact-item-value">
@@ -325,7 +327,11 @@
               </div>
 
               <div class="contact-item">
-                <div class="contact-item-icon" aria-hidden="true">📞</div>
+                <div class="contact-item-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                    <path d="M6.2 3.5h3l1.5 3.8-1.9 1.4a11.5 11.5 0 0 0 5.5 5.5l1.4-1.9 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7C10.6 17.8 6.2 13.4 4.5 5.4A1.7 1.7 0 0 1 6.2 3.5Z" stroke-linejoin="round"/>
+                  </svg>
+                </div>
                 <div class="contact-item-body">
                   <div class="contact-item-label">Telefon</div>
                   <div class="contact-item-value">
@@ -343,11 +349,16 @@
           </div>
 
           <div class="contact-map" data-reveal>
+            <!-- src steht in data-src, gesetzt wird es von
+                 js/main.js → initMap(), sobald die Karte in den Blick
+                 kommt. Grund: die OSM-Einbettung misst ihre Kachel-
+                 fläche genau einmal beim Erzeugen des Dokuments. Steht
+                 die Rasterbreite dann noch nicht fest, bleibt die Karte
+                 auf halber Breite in der Ecke hängen. -->
             <iframe
               class="map-frame"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=15.697%2C47.095%2C15.715%2C47.108&layer=mapnik&marker=47.1015%2C15.7060"
+              data-src="https://www.openstreetmap.org/export/embed.html?bbox=15.697%2C47.095%2C15.715%2C47.108&layer=mapnik&marker=47.1015%2C15.7060"
               title="Standort Gelateria Reina auf der Karte"
-              loading="lazy"
               allowfullscreen>
             </iframe>
             <p class="map-caption">
@@ -372,13 +383,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#home" class="site-logo">
-            <svg class="site-logo-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2.4c3.63 0 6.3 2.5 6.3 5.5 0 .55-.09 1.08-.26 1.58H5.96A4.9 4.9 0 0 1 5.7 7.9c0-3 2.67-5.5 6.3-5.5Z"/>
-              <path d="M6.5 11.1h11l-4.6 10.06a1 1 0 0 1-1.82 0L6.5 11.1Z"/>
-            </svg>
-            Gelateria <span>Reina</span>
-          </a>
+          <a href="#home" class="site-logo">Gelateria <span>Reina</span></a>
           <p>Hausgemachtes Gelato aus Gleisdorf, täglich frisch und mit Leidenschaft zubereitet.</p>
         </div>
 

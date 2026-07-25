@@ -65,7 +65,7 @@
   --space-32: 8rem;
 
   /* --- Sections --- */
-  --section-padding: clamp(4.5rem, 9vw, 8rem) clamp(1.5rem, 6vw, 5rem);
+  --section-padding: clamp(4rem, 7vw, 6.5rem) clamp(1.5rem, 6vw, 5rem);
   --max-width: 1180px;
   /* Höhe des fixen Headers — Ankersprünge dürfen nicht darunter landen */
   --header-offset: 5.5rem;
@@ -193,7 +193,7 @@ section[id] { scroll-margin-top: var(--header-offset); }
 .section-header {
   text-align: center;
   max-width: 620px;
-  margin: 0 auto var(--space-16);
+  margin: 0 auto var(--space-12);
 }
 .section-header .t-label { display: block; margin-bottom: var(--space-4); }
 .section-header .t-h2    { margin-bottom: var(--space-4); }

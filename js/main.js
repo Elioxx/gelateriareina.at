@@ -9,7 +9,39 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavHighlight();
   initRevealOnScroll();
   initOpeningStatus();
+  initMap();
 });
+
+/* --- Karte ---
+   Die OSM-Einbettung misst ihre Kachelfläche einmal beim Erzeugen des
+   Dokuments und danach nie wieder — weder beim Neuladen noch beim
+   Größenwechsel. Wird das Iframe zu früh erzeugt, steht die endgültige
+   Rasterbreite noch nicht fest und die Karte bleibt auf halber Breite
+   in der Ecke stehen. Deshalb setzen wir src erst, wenn die Karte in
+   den Blick kommt: dann ist das Layout fertig.
+   Ohne JavaScript bleibt der Link „Größere Karte" unter der Karte. */
+function initMap() {
+  const frame = document.querySelector('.map-frame[data-src]');
+  if (!frame) return;
+
+  const load = () => {
+    if (frame.src) return;
+    frame.src = frame.dataset.src;
+  };
+
+  if (!('IntersectionObserver' in window)) { load(); return; }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      // Ein Frame warten, damit Breite und Höhe sicher stehen
+      requestAnimationFrame(load);
+    });
+  }, { rootMargin: '200px' });
+
+  observer.observe(frame);
+}
 
 /* --- Sticky Header --- */
 function initHeader() {

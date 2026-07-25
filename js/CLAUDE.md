@@ -13,6 +13,7 @@ Vanilla JS, kein Framework, kein Build-Schritt.
 - `initNavHighlight()` – `IntersectionObserver` markiert aktiven Nav-Link
 - `initRevealOnScroll()` – `[data-reveal]` → `.revealed` beim Einblenden
 - `initOpeningStatus()` – „Jetzt geöffnet"-Anzeige + heutige Zeile in der Tabelle
+- `initMap()` – setzt `src` der OSM-Karte aus `data-src`, sobald sie in den Blick kommt
 
 ### Öffnungsstatus
 - `OPENING_HOURS` – Array über die Wochentage (Index 0 = Sonntag), `null` = geschlossen,
@@ -28,6 +29,15 @@ Vanilla JS, kein Framework, kein Build-Schritt.
 
 Der Rückfalltext in `#hero-status` (im HTML) muss immer stimmen – er ist das, was
 ohne JavaScript zu sehen ist.
+
+### Karte
+Die OSM-Einbettung (`export/embed.html`) legt ihre Zeichenfläche einmal beim
+Erzeugen des Dokuments fest und skaliert danach nicht mehr mit – weder beim
+Neuladen des Iframes noch bei einer Größenänderung. Deshalb zwei Vorkehrungen:
+`initMap()` setzt `src` erst beim Sichtbarwerden, und `css/contact.css` gibt der
+Karte eine **feste** Größe von 400×300 statt einer prozentualen Fläche. In einer
+größeren Fläche bleibt die Karte sonst als kleines Rechteck oben links stehen.
+Wer die Kartengröße ändert, muss im Browser nachsehen, ob sie noch füllt.
 
 ## menu.js – Ablauf
 1. `fetch('data/menu.json')` beim DOMContentLoaded

@@ -38,35 +38,29 @@
 .site-header:not(.scrolled) .nav-link:hover,
 .site-header:not(.scrolled) .nav-link.active { color: var(--c-white); }
 .site-header:not(.scrolled) .site-logo span  { color: var(--c-accent-bright); }
-.site-header:not(.scrolled) .site-logo-mark  { color: var(--c-accent-bright); }
 .site-header:not(.scrolled) .nav-link        { color: rgba(255, 255, 255, 0.75); }
 .site-header:not(.scrolled) .nav-toggle span { background: var(--c-white); }
 
-/* --- Logo --- */
+/* --- Logo ---
+   Nur die Wortmarke. Ein gezeichnetes Eistüten-Symbol stand hier
+   schon einmal — es konkurrierte im Hero direkt mit dem echten
+   Zeichen auf dem Ladenschild und sah daneben wie eine schlechte
+   Kopie aus. Die Wortmarke allein ist ruhiger und ehrlicher. */
 .site-logo {
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
+  align-items: baseline;
+  gap: 0.3em;
   font-family: var(--f-display);
-  font-size: var(--text-xl);
+  font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: 0.01em;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
   color: var(--c-text);
   transition: color var(--transition), opacity var(--transition);
 }
-.site-logo:hover { opacity: 0.8; }
+.site-logo:hover { opacity: 0.75; }
 .site-logo span { color: var(--c-accent); font-style: italic; }
-
-/* Eistüte, abgeleitet vom goldenen Zeichen auf dem Ladenschild */
-.site-logo-mark {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  color: var(--c-accent);
-  transition: color var(--transition), transform var(--transition);
-}
-.site-logo:hover .site-logo-mark { transform: rotate(-8deg); }
 
 /* --- Nav --- */
 .site-nav {
@@ -191,8 +185,7 @@
   color: var(--c-white);
   margin-bottom: var(--space-4);
 }
-.footer-brand .site-logo span,
-.footer-brand .site-logo-mark { color: var(--c-accent-bright); }
+.footer-brand .site-logo span { color: var(--c-accent-bright); }
 
 .footer-brand p {
   font-size: var(--text-sm);
@@ -235,6 +228,11 @@
   .site-nav { display: none; }
   .nav-toggle { display: flex; }
 
+  /* Am Handy nahm die Wortmarke über die Hälfte der Bildschirmbreite
+     ein und drängte sich gegen den Menüknopf. */
+  .site-header { padding: var(--space-4) 0; }
+  .site-logo { font-size: 1.0625rem; }
+
   .footer-grid {
     grid-template-columns: 1fr;
     gap: var(--space-8);
@@ -245,4 +243,9 @@
     gap: var(--space-2);
     text-align: center;
   }
+}
+
+/* Sehr schmale Geräte (iPhone SE): Wortmarke noch eine Stufe kleiner */
+@media (max-width: 380px) {
+  .site-logo { font-size: 0.9375rem; }
 }

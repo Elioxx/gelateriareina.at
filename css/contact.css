@@ -6,7 +6,9 @@
 
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
+  /* Kartenspalte nicht mehr die breitere: die Karte hat jetzt eine
+     feste Größe, eine übergroße Spalte ließe nur Leerraum daneben. */
+  grid-template-columns: 1.15fr 1fr;
   gap: clamp(3rem, 6vw, 6rem);
   align-items: start;
 }
@@ -111,7 +113,12 @@
   background: var(--c-bg);
   border: 1px solid var(--c-border);
   color: var(--c-accent);
-  font-size: 15px;
+}
+
+.contact-item-icon svg {
+  width: 19px;
+  height: 19px;
+  stroke-linecap: round;
 }
 
 .contact-item-label {
@@ -163,14 +170,22 @@
   top: 7rem;
 }
 
+/* Feste Kantenlängen statt einer prozentualen Fläche: die OSM-
+   Einbettung zeichnet die Karte nur bis zu einer Größe, die sie beim
+   Erzeugen des Dokuments festlegt, und skaliert danach nicht mehr mit.
+   In einer breiteren Fläche blieb die Karte als kleines Rechteck oben
+   links stehen. 400×300 ist im Browser geprüft und füllt sauber;
+   schmalere Geräte gehen über width:100% mit. */
 .map-frame {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  max-width: 400px;
+  height: 300px;
+  margin-inline: auto;
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   /* Karte leicht entsättigen, damit sie sich der Seite unterordnet */
   filter: saturate(0.65) contrast(1.04);
-  display: block;
   box-shadow: var(--shadow);
 }
 

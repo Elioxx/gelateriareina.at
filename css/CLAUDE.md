@@ -6,9 +6,9 @@ Alle Dateien nutzen CSS Custom Properties aus `base.css`. Ladereihenfolge in `in
 |--------------|---------------------------------------------------------------------|
 | base.css     | Design Tokens (--c-*, --f-*, --space-*), Reset, Typo-Utils, Buttons |
 | layout.css   | `.site-header`, `.site-nav`, `.nav-mobile`, `.site-footer`          |
-| hero.css     | `.hero`, `.hero-content`, `.hero-visual`, `.hero-scroll`            |
+| hero.css     | `.hero` (Foto als background-image), `.hero-content`, `.hero-scroll` |
 | menu.css     | `.menu-tabs`, `.menu-panel`, `.flavor-grid`, `.flavor-card`         |
-| about.css    | `.about-grid`, `.about-visual` + `.gallery-grid`, `.gallery-item`   |
+| about.css    | `.about-grid`, `.about-visual` + `.gallery-grid`, `.gallery-item--wide/--tall/--small` |
 | contact.css  | `.contact-grid`, `.hours-list`, `.contact-item`, `.map-frame`       |
 
 ## Neue Styles hinzufügen

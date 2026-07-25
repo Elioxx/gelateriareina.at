@@ -40,11 +40,32 @@ Alle anderen CSS-Dateien setzen base.css voraus. Ladereihenfolge in index.html n
 
 ## Inhalte anpassen
 
-### Fotos hinzufügen
-Bilder unter `assets/images/` ablegen (bevorzugt WebP). Dann im HTML:
-- Hero: `<div class="hero-img">` → `<div class="hero-img"><img src="assets/images/NAME.webp" alt="..."></div>`
-- Galerie: `<div class="gallery-item gallery-item--placeholder">` → `<div class="gallery-item"><img ...></div>` (Klasse `gallery-item--placeholder` entfernen)
-- Über uns: analog mit `.about-img-main` und `.about-img-accent`
+### Fotos austauschen
+Alle Fotos liegen als WebP unter `assets/images/`. Die Platzhalter-Varianten gibt es nicht mehr –
+Bilder werden direkt ersetzt:
+
+| Datei                         | Ort im Layout                         | Format   |
+|-------------------------------|---------------------------------------|----------|
+| `hero-eisdiele-front.webp`    | Hero – `background-image` in hero.css | 3:2 quer |
+| `ueber-uns-eisverkauf.webp`   | `.about-img-main`                     | 4:5 hoch |
+| `ueber-uns-portionieren.webp` | `.about-img-accent`                   | 4:5 hoch |
+| `galerie-innenraum.webp`      | Galerie `--wide` (Panorama)           | 3:2 quer |
+| `galerie-gaeste.webp`         | Galerie `--tall` (hoher Anker)        | 2:3 hoch |
+| `galerie-uebergabe.webp`      | Galerie `--small`                     | 3:2 quer |
+| `galerie-schlange.webp`       | Galerie `--small`                     | 3:2 quer |
+
+Neues Foto aus einem JPG erzeugen (max. 2000 px breit, Qualität 85):
+```sh
+ffmpeg -i FOTO.jpg -vf "scale=1600:-2" -frames:v 1 \
+  -c:v libwebp -quality 85 -compression_level 6 -preset photo assets/images/NAME.webp
+```
+Beim Ersetzen die `width`/`height`-Attribute im HTML mitziehen (verhindert Layout-Shift).
+Der Bildausschnitt lässt sich pro Kachel über `style="object-position: …"` feinjustieren.
+
+**Galerie-Mosaik:** Die vier Kacheln sind in `about.css` fest im 12-Spalten-Raster platziert
+(`--wide` 7 Spalten, `--tall` 5 Spalten über beide Reihen, zwei `--small` mit 4 + 3 Spalten).
+Kommt eine Kachel dazu oder fällt eine weg, müssen diese Regeln angepasst werden – sonst
+bleibt eine Lücke im Raster.
 
 ### Öffnungszeiten ändern
 Zwei Stellen: `index.html` (Section `#kontakt` + Footer) und `data/info.json`.

@@ -14,6 +14,9 @@
 
   <title>Gelateria Reina – Hausgemachtes Gelato Gleisdorf</title>
 
+  <!-- Hero-Bild vorladen: es ist das LCP-Element der Seite -->
+  <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
+
   <!-- CSS: base must come first (defines variables used by others) -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -101,12 +104,7 @@
           </div>
         </div>
 
-        <!-- Visual: ersetze die Bilder mit echten Fotos -->
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-img hero-img--tall hero-img--placeholder"></div>
-          <div class="hero-img hero-img--placeholder"></div>
-          <div class="hero-img hero-img--placeholder"></div>
-        </div>
+        <!-- Das Hero-Foto liegt als background-image auf .hero (siehe css/hero.css) -->
       </div>
 
       <div class="hero-scroll" aria-hidden="true">
@@ -160,10 +158,15 @@
             </blockquote>
           </div>
 
-          <!-- Bilder: ersetze mit echten Fotos -->
-          <div class="about-visual" aria-hidden="true">
-            <div class="about-img-main about-img-placeholder"></div>
-            <div class="about-img-accent about-img-placeholder"></div>
+          <div class="about-visual">
+            <img class="about-img-main"
+                 src="assets/images/ueber-uns-eisverkauf.webp"
+                 width="1200" height="1500" loading="lazy" decoding="async"
+                 alt="Mitarbeiter mit frisch gedrehtem Stanitzel vor dem Gelateria-Reina-Schriftzug im Verkaufsraum.">
+            <img class="about-img-accent"
+                 src="assets/images/ueber-uns-portionieren.webp"
+                 width="900" height="1126" loading="lazy" decoding="async"
+                 alt="Gelato wird mit dem Spatel in einen Becher portioniert.">
           </div>
         </div>
       </div>
@@ -180,23 +183,43 @@
           <h2 class="t-h2">Galerie</h2>
         </header>
 
-        <!-- Ersetze die Placeholder-Divs mit <img src="assets/images/..." alt="..."> -->
+        <!-- Mosaik aus 4 Bildern. Die Flächen sind bewusst unterschiedlich groß:
+             ein breites Panorama, ein hohes Hochformat als Anker rechts, zwei
+             kleinere Kacheln darunter. Reihenfolge erzählt: innen → Gäste →
+             Übergabe → Andrang. Grid-Bereiche: siehe .gallery-item--* in about.css -->
         <div class="gallery-grid" data-reveal>
-          <div class="gallery-item gallery-item--placeholder">
-            <div class="gallery-item-overlay"></div>
-          </div>
-          <div class="gallery-item gallery-item--placeholder">
-            <div class="gallery-item-overlay"></div>
-          </div>
-          <div class="gallery-item gallery-item--placeholder">
-            <div class="gallery-item-overlay"></div>
-          </div>
-          <div class="gallery-item gallery-item--placeholder">
-            <div class="gallery-item-overlay"></div>
-          </div>
-          <div class="gallery-item gallery-item--placeholder">
-            <div class="gallery-item-overlay"></div>
-          </div>
+
+          <figure class="gallery-item gallery-item--wide">
+            <img src="assets/images/galerie-innenraum.webp"
+                 width="1600" height="1066" loading="lazy" decoding="async"
+                 style="object-position: center 60%"
+                 alt="Blick in den Verkaufsraum – Gäste an der Eisvitrine unter den Pendelleuchten.">
+            <figcaption class="gallery-item-caption">An der Vitrine</figcaption>
+          </figure>
+
+          <figure class="gallery-item gallery-item--tall">
+            <img src="assets/images/galerie-gaeste.webp"
+                 width="1000" height="1500" loading="lazy" decoding="async"
+                 alt="Zwei Gäste mit Stanitzel vor dem Eingang der Gelateria Reina.">
+            <figcaption class="gallery-item-caption">Stammgäste</figcaption>
+          </figure>
+
+          <figure class="gallery-item gallery-item--small">
+            <img src="assets/images/galerie-uebergabe.webp"
+                 width="1400" height="934" loading="lazy" decoding="async"
+                 style="object-position: 60% center"
+                 alt="Ein frisch gedrehtes Stanitzel wird über die Vitrine hinweg übergeben.">
+            <figcaption class="gallery-item-caption">Bitte sehr</figcaption>
+          </figure>
+
+          <figure class="gallery-item gallery-item--small">
+            <img src="assets/images/galerie-schlange.webp"
+                 width="1400" height="934" loading="lazy" decoding="async"
+                 style="object-position: center 40%"
+                 alt="Warteschlange vor der Gelateria Reina an einem Sommertag.">
+            <figcaption class="gallery-item-caption">Sommertag in Gleisdorf</figcaption>
+          </figure>
+
         </div>
 
         <div class="gallery-cta" data-reveal>

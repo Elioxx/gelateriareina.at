@@ -1,5 +1,10 @@
 /* =========================================================
    hero.css — Hero / Startseite Section
+   Aufbau in Ebenen (z-index):
+     0  .hero-fallback   Standbild, solange das Video nicht läuft
+     1  .hero-video-wrap YouTube-Iframe, formatfüllend skaliert
+     2  .hero-overlay    dunkler Verlauf für Lesbarkeit
+     3  .container       Text, Button, Scroll-Hinweis
    ========================================================= */
 
 .hero {
@@ -8,41 +13,84 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background-color: var(--c-bg-soft);
-  /* Hero-Foto — Lokal von vorne. Der Ausschnitt sitzt leicht über der Mitte,
-     damit der Schriftzug über der Markise auch auf breiten Screens im Bild bleibt. */
+  /* Eigener Stapelkontext: die Hero-Ebenen bleiben unter dem fixen Header */
+  isolation: isolate;
+  /* Dunkler Grund — trägt die Fläche, falls weder Video noch Bild laden */
+  background-color: #14100E;
+}
+
+/* --- Ebene 0: Standbild --- */
+/* Dasselbe Foto wie früher als Hero-Hintergrund. Bewusst weit abgedunkelt:
+   Es füllt die Fläche vor dem ersten Videoframe und verschwindet danach
+   optisch hinter dem Video, ohne dass es beim Start sichtbar „umschaltet". */
+.hero-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   background-image: url('../assets/images/hero-eisdiele-front.webp');
   background-size: cover;
   background-position: center 38%;
   background-repeat: no-repeat;
-}
-
-/* Cream-Schleier über dem Foto: links deckend (Textseite), rechts offen (Bildseite).
-   Hält den dunklen Text lesbar, ohne die helle Farbwelt der Seite zu brechen. */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg,
-    rgba(250, 250, 247, 0.97) 0%,
-    rgba(250, 250, 247, 0.95) 32%,
-    rgba(250, 250, 247, 0.72) 50%,
-    rgba(243, 237, 230, 0.24) 74%,
-    rgba(243, 237, 230, 0.10) 100%);
+  opacity: 0.28;
   pointer-events: none;
 }
 
+/* --- Ebene 1: Video --- */
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* „object-fit: cover" für ein Iframe: Die Größe wächst über den Viewport
+   hinaus, bis die kürzere Achse gefüllt ist, und wird mittig zentriert.
+   Beide max()-Werte beschreiben dasselbe 16:9-Verhältnis (177.78 : 100 bzw.
+   100 : 56.25) — das Video wird also nie verzerrt, sondern nur beschnitten.
+   scale(1.06) schneidet zusätzlich den Rand ab, wo YouTube Titel und
+   Branding einblendet. */
+.hero-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, 177.78svh);
+  height: max(56.25vw, 100svh);
+  transform: translate(-50%, -50%) scale(1.06);
+  border: 0;
+  pointer-events: none;
+}
+
+/* --- Ebene 2: Overlay --- */
+/* Drei Verläufe: links deckend für die Textspalte, oben abgedunkelt für den
+   transparenten Header, unten für den Scroll-Hinweis und den Übergang zur
+   nächsten Section. */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(100deg,
+      rgba(20, 16, 14, 0.88) 0%,
+      rgba(20, 16, 14, 0.74) 40%,
+      rgba(20, 16, 14, 0.46) 68%,
+      rgba(20, 16, 14, 0.34) 100%),
+    linear-gradient(to bottom,
+      rgba(20, 16, 14, 0.55) 0%,
+      rgba(20, 16, 14, 0) 22%,
+      rgba(20, 16, 14, 0) 68%,
+      rgba(20, 16, 14, 0.60) 100%);
+}
+
+/* --- Ebene 3: Inhalt --- */
 .hero .container {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
-  align-items: center;
+  z-index: 3;
   padding-top: 7rem;
 }
 
-/* Text side */
-.hero-content { max-width: 540px; }
+.hero-content { max-width: 620px; }
 
 .hero-eyebrow {
   display: flex;
@@ -56,8 +104,10 @@
   display: block;
   width: 24px;
   height: 1px;
-  background: var(--c-accent);
+  background: var(--c-accent-bright);
 }
+
+.hero-eyebrow .t-label { color: var(--c-accent-bright); }
 
 .hero-title {
   font-family: var(--f-serif);
@@ -66,21 +116,24 @@
   line-height: 1.0;
   letter-spacing: -0.02em;
   margin-bottom: var(--space-6);
-  color: var(--c-text);
+  color: var(--c-white);
+  /* Weicher Schatten statt harter Kanten — fängt helle Videoframes ab */
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.45);
 }
 
 .hero-title em {
   font-style: italic;
-  color: var(--c-accent);
+  color: var(--c-accent-bright);
 }
 
 .hero-subtitle {
   font-size: var(--text-lg);
-  color: var(--c-text-muted);
+  color: rgba(255, 255, 255, 0.82);
   font-weight: 300;
-  max-width: 380px;
-  margin-bottom: var(--space-10);
+  max-width: 420px;
+  margin-bottom: var(--space-8);
   line-height: 1.7;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.45);
 }
 
 .hero-actions {
@@ -90,9 +143,22 @@
   flex-wrap: wrap;
 }
 
+/* Button-Variante für dunklen Grund (Basis: .btn--outline in base.css) */
+.hero .btn--outline {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: var(--c-white);
+  background: rgba(20, 16, 14, 0.18);
+  backdrop-filter: blur(2px);
+}
+.hero .btn--outline:hover {
+  background: var(--c-white);
+  border-color: var(--c-white);
+  color: var(--c-text);
+}
+
 .hero-detail {
   font-size: var(--text-sm);
-  color: var(--c-text-muted);
+  color: rgba(255, 255, 255, 0.72);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -103,55 +169,13 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--c-accent);
-}
-
-/* --- Video (zweite Grid-Spalte) ---
-   Liegt als weiße Karte über dem Hero-Foto, gleiche Sprache wie die
-   Galerie-Kacheln: 1px Rahmen, sanfter Schatten, Caption unter dem Bild. */
-.hero-media {
-  justify-self: end;
-  width: 100%;
-  max-width: 480px;
-  padding: var(--space-3);
-  background: var(--c-bg-card);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-}
-
-.hero-media-frame {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--c-bg-soft);
-}
-
-.hero-media-frame iframe {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.hero-media-caption {
-  padding: var(--space-3) var(--space-1) var(--space-1);
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--c-text-muted);
-}
-
-.hero-media-caption .t-label {
-  display: block;
-  margin-bottom: var(--space-1);
+  background: var(--c-accent-bright);
 }
 
 /* Scroll hint */
 .hero-scroll {
   position: absolute;
+  z-index: 3;
   bottom: var(--space-8);
   left: 50%;
   transform: translateX(-50%);
@@ -162,14 +186,14 @@
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--c-text-muted);
+  color: rgba(255, 255, 255, 0.6);
   animation: bounce 2.5s infinite;
 }
 
 .hero-scroll-arrow {
   width: 1px;
   height: 32px;
-  background: linear-gradient(to bottom, var(--c-accent), transparent);
+  background: linear-gradient(to bottom, var(--c-accent-bright), transparent);
 }
 
 @keyframes bounce {
@@ -180,48 +204,41 @@
 /* --- Responsive --- */
 @media (max-width: 1024px) {
   .hero .container {
-    grid-template-columns: 1fr;
-    gap: var(--space-12);
     text-align: center;
-    /* Platz für den Scroll-Hinweis, der einspaltig unter dem Video landet */
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
   }
   .hero-content { max-width: 100%; }
-  .hero-subtitle { max-width: 100%; }
+  .hero-subtitle {
+    max-width: 520px;
+    margin-inline: auto;
+  }
   .hero-eyebrow { justify-content: center; }
   .hero-actions { justify-content: center; }
 
-  /* Video rutscht unter den Text und wird zentriert */
-  .hero-media {
-    justify-self: center;
-    max-width: 560px;
-  }
-
-  /* Einspaltig steht der Text über dem ganzen Foto — deshalb hier ein
+  /* Der Text steht jetzt mittig über dem ganzen Video — deshalb ein
      gleichmäßiger Schleier statt des seitlichen Verlaufs. */
-  .hero::before {
-    background: linear-gradient(180deg,
-      rgba(250, 250, 247, 0.94) 0%,
-      rgba(250, 250, 247, 0.90) 55%,
-      rgba(243, 237, 230, 0.55) 100%);
-  }
-}
-
-/* Auf Handy-Breiten schmaler, damit das Video nicht die ganze Spalte
-   dominiert und der Text darüber weiter im Blick bleibt. */
-@media (max-width: 768px) {
-  .hero-media {
-    max-width: 420px;
-    padding: var(--space-2);
-  }
-  .hero-media-caption {
-    padding: var(--space-2) var(--space-1) 0;
-    font-size: var(--text-xs);
+  .hero-overlay {
+    background:
+      linear-gradient(180deg,
+        rgba(20, 16, 14, 0.72) 0%,
+        rgba(20, 16, 14, 0.62) 45%,
+        rgba(20, 16, 14, 0.70) 100%);
   }
 }
 
 @media (max-width: 640px) {
-  /* Hochformat: Bild läuft seitlich über — Eingang und Schriftzug halten */
-  .hero { background-position: 42% center; }
   .hero-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+  /* Hochformat: 16:9 wird stark beschnitten — Standbild etwas kräftiger
+     zeigen und den Ausschnitt auf den Eingang legen. */
+  .hero-fallback {
+    background-position: 42% center;
+    opacity: 0.34;
+  }
+}
+
+/* Reduzierte Bewegung: Video ausblenden, Standbild als Hero-Bild zeigen */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video { display: none; }
+  .hero-fallback { opacity: 0.55; }
+  .hero-scroll { animation: none; }
 }

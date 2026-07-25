@@ -46,7 +46,7 @@ Bilder werden direkt ersetzt:
 
 | Datei                         | Ort im Layout                         | Format   |
 |-------------------------------|---------------------------------------|----------|
-| `hero-eisdiele-front.webp`    | Hero – `background-image` in hero.css | 3:2 quer |
+| `hero-eisdiele-front.webp`    | Hero – `.hero-fallback` (Standbild hinter dem Video) | 3:2 quer |
 | `ueber-uns-eisverkauf.webp`   | `.about-img-main`                     | 4:5 hoch |
 | `ueber-uns-portionieren.webp` | `.about-img-accent`                   | 4:5 hoch |
 | `galerie-innenraum.webp`      | Galerie `--wide` (Panorama)           | 3:2 quer |

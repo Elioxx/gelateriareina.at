@@ -14,11 +14,12 @@
 
   <title>Gelateria Reina – Hausgemachtes Gelato Gleisdorf</title>
 
-  <!-- Hero-Bild vorladen: es ist das LCP-Element der Seite -->
+  <!-- Hero-Standbild vorladen: liegt hinter dem Hintergrund-Video und ist
+       sichtbar, solange das Video noch nicht spielt (LCP-Element) -->
   <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
 
-  <!-- Video-Embed im Hero (youtube-nocookie): Verbindung früh aufbauen,
-       aber ohne preload — das Hero-Foto behält Priorität. -->
+  <!-- Hintergrund-Video im Hero (youtube-nocookie): Verbindung früh aufbauen,
+       aber ohne preload — das Standbild behält Priorität. -->
   <link rel="preconnect" href="https://www.youtube-nocookie.com">
   <link rel="preconnect" href="https://i.ytimg.com">
 
@@ -86,6 +87,29 @@
          HERO — Startseite
          =================================================== -->
     <section class="hero" id="home" aria-label="Startseite">
+
+      <!-- Hintergrund-Video, formatfüllend (Struktur + Skalierung: css/hero.css).
+           Reine Dekoration: aria-hidden, pointer-events: none, tabindex -1 —
+           Klicks und Tastaturfokus gehen immer an den Hero-Inhalt.
+           YouTube erlaubt autoplay nur stummgeschaltet (mute=1); loop=1 braucht
+           zusätzlich playlist=<video-id>. youtube-nocookie: kein Tracking-Cookie.
+           Das Standbild darunter (.hero-fallback) trägt die Fläche, bis das
+           Video läuft – und bleibt bei reduzierter Bewegung dauerhaft sichtbar. -->
+      <div class="hero-video-wrap" aria-hidden="true">
+        <div class="hero-fallback"></div>
+        <iframe
+          class="hero-video"
+          src="https://www.youtube-nocookie.com/embed/53C8ecrirbI?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=53C8ecrirbI&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;modestbranding=1&amp;disablekb=1&amp;playsinline=1"
+          title="Gelateria Reina – Impressionen aus dem Lokal"
+          tabindex="-1"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+      </div>
+
+      <!-- Dunkler Verlauf zwischen Video und Text: hält Titel, Fließtext und
+           Button lesbar, egal welches Frame gerade läuft. -->
+      <div class="hero-overlay" aria-hidden="true"></div>
+
       <div class="container">
         <div class="hero-content">
           <div class="hero-eyebrow">
@@ -108,26 +132,6 @@
             <span class="hero-detail">Do – So &nbsp;10 – 18 Uhr</span>
           </div>
         </div>
-
-        <!-- Video in der zweiten Grid-Spalte — dort war bisher nur das Hero-Foto
-             (background-image auf .hero, siehe css/hero.css) zu sehen. Der weiße
-             Kartenrahmen setzt das Video vom Foto ab und hält die Bildunterschrift
-             lesbar. youtube-nocookie: kein Tracking-Cookie ohne Interaktion. -->
-        <figure class="hero-media">
-          <div class="hero-media-frame">
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/53C8ecrirbI?rel=0"
-              title="Gelateria Reina – so entsteht unser Gelato"
-              loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen></iframe>
-          </div>
-          <figcaption class="hero-media-caption">
-            <span class="t-label">Im Video</span>
-            Ein Blick in die Herstellung – täglich frisch bei uns im Lokal.
-          </figcaption>
-        </figure>
       </div>
 
       <div class="hero-scroll" aria-hidden="true">

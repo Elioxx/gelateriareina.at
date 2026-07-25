@@ -16,6 +16,9 @@
   --c-accent:       #B8935A;
   --c-accent-hover: #9E7B45;
   --c-accent-light: #EAD9C4;
+  /* Aufgehelltes Gold für dunkle Flächen (Hero-Video, Header darüber) —
+     --c-accent wirkt dort zu stumpf */
+  --c-accent-bright: #DDB877;
   --c-border:       #E0D5CB;
   --c-white:        #FFFFFF;
 

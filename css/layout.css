@@ -26,6 +26,18 @@
   justify-content: space-between;
 }
 
+/* Ohne .scrolled steht der Header immer über dem dunklen Hero-Video —
+   dort muss er hell sein. Ab 40px Scroll übernimmt .scrolled (cremiger
+   Hintergrund) wieder die Standardfarben aus den Regeln unten. */
+.site-header:not(.scrolled) .site-logo,
+.site-header:not(.scrolled) .nav-link:hover,
+.site-header:not(.scrolled) .nav-link.active {
+  color: var(--c-white);
+}
+.site-header:not(.scrolled) .site-logo span { color: var(--c-accent-bright); }
+.site-header:not(.scrolled) .nav-link { color: rgba(255, 255, 255, 0.72); }
+.site-header:not(.scrolled) .nav-toggle span { background: var(--c-white); }
+
 /* Logo */
 .site-logo {
   font-family: var(--f-serif);

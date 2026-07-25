@@ -10,7 +10,72 @@ document.addEventListener('DOMContentLoaded', () => {
   initRevealOnScroll();
   initOpeningStatus();
   initMap();
+  initGalleryDots();
+  initActionBar();
 });
+
+/* --- Galerie-Punkte ---
+   Am Handy ist die Galerie ein Wisch-Karussell (scroll-snap, siehe
+   css/about.css). Die Punkte zeigen, wo man darin steht — ohne sie
+   sieht man nicht, dass es überhaupt weitergeht.
+
+   Bewusst nur Anzeige, nicht bedienbar: als Tap-Ziele wären die
+   Punkte zu klein, und gewischt wird ohnehin direkt am Bild.
+   Ab 640px blendet das CSS die Punkte aus; der Scroll-Listener
+   läuft dann ins Leere, was billiger ist als ihn zu verwalten. */
+function initGalleryDots() {
+  const track = document.getElementById('gallery-grid');
+  const dots  = document.getElementById('gallery-dots');
+  if (!track || !dots) return;
+
+  const items = Array.from(track.children);
+  if (items.length < 2) return;
+
+  items.forEach(() => {
+    const dot = document.createElement('span');
+    dot.className = 'gallery-dot';
+    dots.appendChild(dot);
+  });
+
+  const marks = Array.from(dots.children);
+
+  const sync = () => {
+    // Das Bild, dessen linke Kante der Scroll-Position am nächsten
+    // liegt, gilt als das aktuelle.
+    let nearest = 0;
+    let best = Infinity;
+    items.forEach((item, i) => {
+      const d = Math.abs(item.offsetLeft - track.scrollLeft - track.clientLeft);
+      if (d < best) { best = d; nearest = i; }
+    });
+    marks.forEach((m, i) => m.classList.toggle('is-active', i === nearest));
+  };
+
+  track.addEventListener('scroll', sync, { passive: true });
+  sync();
+}
+
+/* --- Aktionsbalken (nur Handy) ---
+   Zwei Flächen unten: anrufen und Route. Erscheint erst, wenn der
+   Hero durch ist — darüber stünde er nur im Weg, und ganz oben ist
+   ohnehin schon der Öffnungsstatus zu sehen.
+   Styling und Ausblenden ab 900px: css/mobile.css */
+function initActionBar() {
+  const bar  = document.getElementById('action-bar');
+  const hero = document.getElementById('home');
+  if (!bar || !hero) return;
+
+  if (!('IntersectionObserver' in window)) { bar.classList.add('is-visible'); return; }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      // Sichtbar, sobald der Hero oben aus dem Blick gescrollt ist.
+      bar.classList.toggle('is-visible', !entry.isIntersecting);
+    });
+  }, { rootMargin: '-40% 0px 0px 0px' });
+
+  observer.observe(hero);
+}
 
 /* --- Karte ---
    Die OSM-Einbettung misst ihre Kachelfläche einmal beim Erzeugen des

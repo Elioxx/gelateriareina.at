@@ -2,9 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Gelateria Reina – Hausgemachtes Gelato in Gleisdorf. Täglich frisch zubereitetes Eis aus besten Zutaten. Do–So 10–18 Uhr.">
-  <meta name="theme-color" content="#FBF9F5">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="color-scheme" content="light">
 
   <!-- Open Graph — die Seite wird vor allem über Facebook geteilt -->
   <meta property="og:title" content="Gelateria Reina – Hausgemachtes Gelato Gleisdorf">
@@ -19,22 +20,32 @@
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 
-  <!-- Hero-Foto vorladen: es ist das LCP-Element der Seite -->
-  <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
+  <!-- Hero-Foto vorladen: es ist das LCP-Element. imagesrcset muss zum
+       srcset am <img> passen, sonst lädt der Browser zwei Dateien. -->
+  <link rel="preload" as="image"
+        href="assets/images/hero-eisdiele-front-900.webp"
+        imagesrcset="assets/images/hero-eisdiele-front-900.webp 900w, assets/images/hero-eisdiele-front.webp 2000w"
+        imagesizes="(min-width: 900px) 52vw, 100vw"
+        fetchpriority="high">
 
-  <!-- Schriften: Fraunces (Display) + Karla (Fließtext).
+  <!-- Schriften: Fraunces (Display), Karla (Fließtext), Caveat (Handschrift).
        Als <link> statt @import in der CSS — spart eine Rundreise. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,400&family=Caveat:wght@500;600&display=swap">
 
-  <!-- CSS: base.css zuerst (definiert alle Custom Properties) -->
+  <!-- CSS: base.css zuerst (definiert alle Custom Properties),
+       ornaments.css direkt danach (das Ornament-System nutzen alle),
+       mobile.css zuletzt (überschreibt bewusst). -->
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/ornaments.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/menu.css">
   <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="css/video.css">
   <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/mobile.css">
 
   <style>
     /* Einblenden beim Scrollen. Bewusst an .js gekoppelt: ohne
@@ -63,7 +74,18 @@
   <header class="site-header" id="site-header" role="banner">
     <div class="container">
       <a href="#home" class="site-logo" aria-label="Gelateria Reina – zur Startseite">
-        Gelateria <span>Reina</span>
+        <!-- Eistüte vom Ladenschild. Ohne data-draw: die Marke darf
+             nie erst nach einer Animation erscheinen. -->
+        <svg class="ink ink--cone site-logo-mark" viewBox="0 0 56 88" aria-hidden="true" focusable="false">
+          <path d="M11 32 C 8 24, 12 18, 18 17 C 19 10, 28 6, 34 10 C 42 8, 48 15, 46 23 C 49 27, 48 31, 45 32"/>
+          <path d="M10 33 C 21 38, 37 38, 46 31"/>
+          <path d="M13 35 L28 84 L45 34"/>
+          <g class="ink-hatch">
+            <path d="M16 44 L41 40"/><path d="M19 55 L38 51"/>
+            <path d="M22 65 L35 62"/><path d="M25 74 L32 72"/>
+          </g>
+        </svg>
+        <span class="site-logo-text">Gelateria <span>Reina</span></span>
       </a>
 
       <nav class="site-nav" aria-label="Hauptnavigation">
@@ -94,25 +116,16 @@
   <main>
 
     <!-- ===================================================
-         HERO — Startseite
+         HERO
 
-         Das Ladenfoto trägt die Fläche in voller Deckkraft; der
-         Verlauf (.hero-scrim) deckt nur so viel ab, wie der Text
-         zum Lesen braucht. Struktur und Ausschnitt: css/hero.css
+         Weiß statt dunkler Foto-Bühne: die Seite gehört dem
+         Weißraum, das Foto ist ein Element darin — kein Hinter-
+         grund, über den Text gelegt wird. Am Handy gestapelt
+         (Text zuerst), ab 900px zweispaltig. Siehe css/hero.css
          =================================================== -->
     <section class="hero" id="home" aria-label="Startseite">
-
-      <div class="hero-media">
-        <img class="hero-img"
-             src="assets/images/hero-eisdiele-front.webp"
-             width="2000" height="1334"
-             fetchpriority="high" decoding="async"
-             alt="Die Gelateria Reina in Gleisdorf: Gäste vor dem Eingang unter dem goldenen Schriftzug an einem Sommertag.">
-      </div>
-
-      <div class="hero-scrim" aria-hidden="true"></div>
-
       <div class="container hero-inner">
+
         <div class="hero-content">
 
           <!-- Öffnungsstatus. Text und Zustandsklasse setzt
@@ -128,7 +141,7 @@
 
           <h1 class="hero-title">
             Echt.<br>
-            <em>Italienisch.</em><br>
+            <span class="swash-word"><em>Italienisch.</em><svg class="ink ink--swash ink--autodraw" viewBox="0 0 200 28" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" d="M3 14 C 30 24, 76 25, 116 18 C 148 12, 176 8, 198 3"/><path data-draw pathLength="100" style="--i:1" d="M30 23 C 66 28, 120 26, 162 19"/></svg></span><br>
             Hausgemacht.
           </h1>
 
@@ -139,16 +152,35 @@
 
           <div class="hero-actions">
             <a href="#sorten" class="btn btn--primary">Sorten ansehen</a>
-            <a href="#kontakt" class="btn btn--ghost">So findest du uns</a>
+            <a href="#kontakt" class="btn btn--outline">So findest du uns</a>
           </div>
         </div>
-      </div>
 
-      <div class="hero-scroll" aria-hidden="true">
-        <span>Mehr</span>
-        <div class="hero-scroll-arrow"></div>
+        <figure class="hero-figure">
+          <div class="hero-photo">
+            <img class="hero-img"
+                 src="assets/images/hero-eisdiele-front-900.webp"
+                 srcset="assets/images/hero-eisdiele-front-900.webp 900w,
+                         assets/images/hero-eisdiele-front.webp 2000w"
+                 sizes="(min-width: 900px) 52vw, 100vw"
+                 width="900" height="600"
+                 fetchpriority="high" decoding="async"
+                 alt="Die Gelateria Reina in Gleisdorf: Gäste vor dem Eingang unter dem goldenen Schriftzug an einem Sommertag.">
+          </div>
+          <figcaption class="hand-note hero-note">Weizer Straße 4, mitten in Gleisdorf</figcaption>
+        </figure>
+
       </div>
     </section>
+
+
+    <!-- Wellen-Trenner statt Farbwechsel: die Seite bleibt weiß,
+         die Trennung übernimmt eine gezeichnete Linie. -->
+    <div class="wave-divider ink-wrap" data-reveal aria-hidden="true">
+      <svg class="ink ink--wave" viewBox="0 0 1200 34" preserveAspectRatio="xMidYMid meet" focusable="false">
+        <path data-draw pathLength="100" d="M0 20 C 90 2, 190 2, 300 16 C 410 30, 500 32, 600 18 C 700 4, 800 2, 900 16 C 1000 30, 1110 30, 1200 14"/>
+      </svg>
+    </div>
 
 
     <!-- ===================================================
@@ -159,15 +191,48 @@
     <section class="section menu-section" id="sorten" aria-label="Speisekarte">
       <div class="container">
         <header class="section-header" data-reveal>
+          <svg class="ink ink--scoop section-mark" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+            <path data-draw pathLength="100" d="M50 30 C 50 42, 40 51, 28 51 C 15 51, 6 42, 6 29 C 6 17, 15 8, 27 8 C 37 8, 44 15, 44 25 C 44 33, 38 39, 30 39 C 23 39, 18 34, 18 27 C 18 22, 22 18, 27 18 C 31 18, 34 21, 34 25"/>
+          </svg>
           <span class="t-label">Speisekarte</span>
-          <h2 class="t-h2">Ein Blick in die <em>Vitrine</em></h2>
+          <h2 class="t-h2">Ein Blick in die
+            <span class="swash-word"><em>Vitrine</em><svg class="ink ink--swash" viewBox="0 0 200 28" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" style="--i:1" d="M3 14 C 30 24, 76 25, 116 18 C 148 12, 176 8, 198 3"/></svg></span>
+          </h2>
           <p>Frisch zubereitet, täglich wechselnd – immer mit den besten Zutaten der Saison.</p>
         </header>
 
-        <!-- Tabs, Panels und Extras werden von menu.js befüllt -->
-        <div class="menu-tabs" id="menu-tabs" role="tablist" aria-label="Eissorte wählen"></div>
+        <!-- Tabs, Panels und Extras werden von menu.js befüllt.
+             Die Tab-Leiste ist am Handy horizontal wischbar. -->
+        <div class="menu-tabs-wrap">
+          <div class="menu-tabs" id="menu-tabs" role="tablist" aria-label="Eissorte wählen"></div>
+        </div>
         <div id="menu-panels"></div>
         <div id="menu-extras"></div>
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         ZITAT-BAND
+         Die eine handgeschriebene Stelle der Seite. Sparsam
+         eingesetzt, damit sie wirkt.
+         =================================================== -->
+    <section class="section quote-band" aria-label="Unser Versprechen">
+      <div class="container quote-inner" data-reveal>
+        <svg class="ink ink--flourish quote-flourish quote-flourish--l" viewBox="0 0 64 32" aria-hidden="true" focusable="false">
+          <path data-draw pathLength="100" d="M1 24 C 12 26, 22 20, 30 12 C 35 7, 43 8, 43 14 C 43 19, 37 20, 36 15 C 35 9, 44 5, 52 9 C 58 12, 60 18, 63 24"/>
+        </svg>
+
+        <blockquote class="quote-text t-hand">
+          Gutes Eis braucht Zeit.<br>
+          Wir nehmen sie uns – jeden Tag aufs Neue.
+        </blockquote>
+
+        <svg class="ink ink--flourish quote-flourish quote-flourish--r" viewBox="0 0 64 32" aria-hidden="true" focusable="false">
+          <path data-draw pathLength="100" style="--i:1" d="M1 24 C 12 26, 22 20, 30 12 C 35 7, 43 8, 43 14 C 43 19, 37 20, 36 15 C 35 9, 44 5, 52 9 C 58 12, 60 18, 63 24"/>
+        </svg>
+
+        <p class="quote-by t-muted">Familie Reina, Gleisdorf</p>
       </div>
     </section>
 
@@ -180,28 +245,40 @@
         <div class="about-grid">
           <div class="about-content" data-reveal>
             <span class="t-label">Unsere Geschichte</span>
-            <h2 class="t-h2">Leidenschaft für <em>echtes</em> Gelato</h2>
-            <div class="divider"></div>
+            <h2 class="t-h2">Leidenschaft für
+              <span class="swash-word"><em>echtes</em><svg class="ink ink--swash" viewBox="0 0 200 28" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" style="--i:1" d="M3 14 C 30 24, 76 25, 116 18 C 148 12, 176 8, 198 3"/></svg></span>
+              Gelato</h2>
             <p class="about-body">
               In unserer Gelateria steht Qualität an erster Stelle. Jede Sorte wird nach
               traditionellen italienischen Rezepturen täglich frisch zubereitet – mit
               ausgewählten Zutaten und ohne künstliche Aromen. Wir glauben daran, dass
               gutes Eis Zeit braucht und Liebe verdient.
             </p>
-            <blockquote class="about-highlight">
-              „Frisch gemacht. Täglich neu."
-            </blockquote>
+            <p class="hand-note about-hand">Frisch gemacht. Täglich neu.</p>
           </div>
 
+          <!-- Das zweite Foto erscheint erst ab 900px: gestapelt
+               wirken zwei Bilder untereinander beliebig. -->
           <div class="about-visual" data-reveal>
-            <img class="about-img-main"
-                 src="assets/images/ueber-uns-eisverkauf.webp"
-                 width="1200" height="1500" loading="lazy" decoding="async"
-                 alt="Mitarbeiter mit frisch gedrehtem Stanitzel vor dem Gelateria-Reina-Schriftzug im Verkaufsraum.">
-            <img class="about-img-accent"
-                 src="assets/images/ueber-uns-portionieren.webp"
-                 width="900" height="1126" loading="lazy" decoding="async"
-                 alt="Gelato wird mit dem Spatel in einen Becher portioniert.">
+            <div class="about-img-wrap about-img-wrap--main">
+              <img class="about-img-main"
+                   src="assets/images/ueber-uns-eisverkauf-900.webp"
+                   srcset="assets/images/ueber-uns-eisverkauf-900.webp 900w,
+                           assets/images/ueber-uns-eisverkauf.webp 1200w"
+                   sizes="(min-width: 900px) 40vw, 100vw"
+                   width="900" height="1126" loading="lazy" decoding="async"
+                   alt="Mitarbeiter mit frisch gedrehtem Stanitzel vor dem Gelateria-Reina-Schriftzug im Verkaufsraum.">
+              <svg class="ink ink--frame about-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path data-draw pathLength="100" d="M5 8 C 26 4, 58 3, 95 6 C 98 30, 99 66, 95 94 C 66 98, 30 97, 6 93 C 2 66, 3 30, 5 9 C 5 9, 8 13, 12 14"/>
+              </svg>
+            </div>
+
+            <div class="about-img-wrap about-img-wrap--accent">
+              <img class="about-img-accent"
+                   src="assets/images/ueber-uns-portionieren.webp"
+                   width="900" height="1126" loading="lazy" decoding="async"
+                   alt="Gelato wird mit dem Spatel in einen Becher portioniert.">
+            </div>
           </div>
         </div>
       </div>
@@ -209,7 +286,60 @@
 
 
     <!-- ===================================================
+         VIDEO
+
+         Click-to-Play-Fassade: vor dem Klick lädt die Seite
+         nichts von YouTube — kein Fremd-Cookie, kein Autoplay,
+         das iOS ohnehin blockiert. js/video.js tauscht die
+         Fassade beim Klick gegen den Player.
+
+         Die hinterlegte ID gehört zum professionell produzierten
+         Video der Gelateria selbst.
+
+         QUELLE WECHSELN:
+           YouTube      → data-video-yt="<ID>"
+           Eigenes MP4  → data-video-mp4="assets/video/datei.mp4"
+         Nur eines von beiden setzen. Ist data-video-mp4 da, hat
+         es Vorrang.
+         =================================================== -->
+    <section class="section video-section" id="video" aria-label="Video">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="t-label">Bewegtbild</span>
+          <h2 class="t-h2">Schau bei uns <em>rein</em></h2>
+        </header>
+
+        <div class="video-stage" data-reveal>
+          <button class="video-facade" id="video-facade" type="button"
+                  data-video-yt="53C8ecrirbI"
+                  aria-label="Video abspielen: Impressionen aus der Gelateria Reina">
+            <img class="video-poster"
+                 src="assets/images/galerie-innenraum-900.webp"
+                 srcset="assets/images/galerie-innenraum-900.webp 900w,
+                         assets/images/galerie-innenraum.webp 1600w"
+                 sizes="(min-width: 900px) 70vw, 100vw"
+                 width="900" height="600" loading="lazy" decoding="async"
+                 alt="">
+            <span class="video-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+            </span>
+          </button>
+
+          <svg class="ink ink--frame video-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path data-draw pathLength="100" d="M5 8 C 26 4, 58 3, 95 6 C 98 30, 99 66, 95 94 C 66 98, 30 97, 6 93 C 2 66, 3 30, 5 9 C 5 9, 8 13, 12 14"/>
+          </svg>
+        </div>
+
+        <p class="hand-note video-note">Ein Blick hinter die Vitrine</p>
+      </div>
+    </section>
+
+
+    <!-- ===================================================
          GALERIE
+         Am Handy ein Wisch-Karussell (scroll-snap), ab 640px
+         zwei Spalten, ab 900px das Mosaik. Rasterplätze und
+         Karussell: css/about.css
          =================================================== -->
     <section class="section gallery-section" id="galerie" aria-label="Galerie">
       <div class="container">
@@ -217,47 +347,63 @@
           <span class="t-label">Einblicke</span>
           <h2 class="t-h2">Bei uns im <em>Laden</em></h2>
         </header>
+      </div>
 
-        <!-- Mosaik aus 4 Bildern mit bewusst ungleichen Flächen:
-             breites Panorama, hohes Hochformat als Anker rechts,
-             zwei kleinere Kacheln darunter. Reihenfolge erzählt:
-             innen → Gäste → Übergabe → Andrang.
-             Rasterplätze: .gallery-item--* in about.css -->
-        <div class="gallery-grid" data-reveal>
+      <!-- Bewusst außerhalb des .container: das Karussell soll am
+           Handy bis an den Rand laufen, damit sichtbar wird, dass
+           es weitergeht. Das Innenabstand-Polster macht .gallery-grid. -->
+      <div class="gallery-grid" id="gallery-grid" data-reveal>
 
-          <figure class="gallery-item gallery-item--wide">
-            <img src="assets/images/galerie-innenraum.webp"
-                 width="1600" height="1066" loading="lazy" decoding="async"
-                 style="object-position: center 60%"
-                 alt="Blick in den Verkaufsraum – Gäste an der Eisvitrine unter den Pendelleuchten.">
-            <figcaption class="gallery-item-caption">An der Vitrine</figcaption>
-          </figure>
+        <figure class="gallery-item gallery-item--wide">
+          <img src="assets/images/galerie-innenraum-900.webp"
+               srcset="assets/images/galerie-innenraum-900.webp 900w,
+                       assets/images/galerie-innenraum.webp 1600w"
+               sizes="(min-width: 900px) 55vw, 85vw"
+               width="900" height="600" loading="lazy" decoding="async"
+               style="object-position: center 60%"
+               alt="Blick in den Verkaufsraum – Gäste an der Eisvitrine unter den Pendelleuchten.">
+          <figcaption class="gallery-item-caption">An der Vitrine</figcaption>
+        </figure>
 
-          <figure class="gallery-item gallery-item--tall">
-            <img src="assets/images/galerie-gaeste.webp"
-                 width="1000" height="1500" loading="lazy" decoding="async"
-                 alt="Zwei Gäste mit Stanitzel vor dem Eingang der Gelateria Reina.">
-            <figcaption class="gallery-item-caption">Stammgäste</figcaption>
-          </figure>
+        <figure class="gallery-item gallery-item--tall">
+          <img src="assets/images/galerie-gaeste-900.webp"
+               srcset="assets/images/galerie-gaeste-900.webp 900w,
+                       assets/images/galerie-gaeste.webp 1000w"
+               sizes="(min-width: 900px) 40vw, 85vw"
+               width="900" height="1350" loading="lazy" decoding="async"
+               alt="Zwei Gäste mit Stanitzel vor dem Eingang der Gelateria Reina.">
+          <figcaption class="gallery-item-caption">Stammgäste</figcaption>
+        </figure>
 
-          <figure class="gallery-item gallery-item--small">
-            <img src="assets/images/galerie-uebergabe.webp"
-                 width="1400" height="934" loading="lazy" decoding="async"
-                 style="object-position: 60% center"
-                 alt="Ein frisch gedrehtes Stanitzel wird über die Vitrine hinweg übergeben.">
-            <figcaption class="gallery-item-caption">Bitte sehr</figcaption>
-          </figure>
+        <figure class="gallery-item gallery-item--small">
+          <img src="assets/images/galerie-uebergabe-900.webp"
+               srcset="assets/images/galerie-uebergabe-900.webp 900w,
+                       assets/images/galerie-uebergabe.webp 1400w"
+               sizes="(min-width: 900px) 33vw, 85vw"
+               width="900" height="600" loading="lazy" decoding="async"
+               style="object-position: 60% center"
+               alt="Ein frisch gedrehtes Stanitzel wird über die Vitrine hinweg übergeben.">
+          <figcaption class="gallery-item-caption">Bitte sehr</figcaption>
+        </figure>
 
-          <figure class="gallery-item gallery-item--small">
-            <img src="assets/images/galerie-schlange.webp"
-                 width="1400" height="934" loading="lazy" decoding="async"
-                 style="object-position: center 40%"
-                 alt="Warteschlange vor der Gelateria Reina an einem Sommertag.">
-            <figcaption class="gallery-item-caption">Sommertag in Gleisdorf</figcaption>
-          </figure>
+        <figure class="gallery-item gallery-item--small">
+          <img src="assets/images/galerie-schlange-900.webp"
+               srcset="assets/images/galerie-schlange-900.webp 900w,
+                       assets/images/galerie-schlange.webp 1400w"
+               sizes="(min-width: 900px) 25vw, 85vw"
+               width="900" height="600" loading="lazy" decoding="async"
+               style="object-position: center 40%"
+               alt="Warteschlange vor der Gelateria Reina an einem Sommertag.">
+          <figcaption class="gallery-item-caption">Sommertag in Gleisdorf</figcaption>
+        </figure>
 
-        </div>
+      </div>
 
+      <!-- Punkte zeigen die Position im Karussell. Nur am Handy
+           sichtbar, gefüllt von js/main.js → initGalleryDots(). -->
+      <div class="gallery-dots" id="gallery-dots" aria-hidden="true"></div>
+
+      <div class="container">
         <div class="gallery-cta" data-reveal>
           <a href="https://www.facebook.com/GelateriaReina/" target="_blank" rel="noopener" class="btn btn--accent">
             Mehr auf Facebook
@@ -265,6 +411,13 @@
         </div>
       </div>
     </section>
+
+
+    <div class="wave-divider ink-wrap" data-reveal aria-hidden="true">
+      <svg class="ink ink--wave" viewBox="0 0 1200 34" preserveAspectRatio="xMidYMid meet" focusable="false">
+        <path data-draw pathLength="100" d="M0 14 C 100 30, 200 30, 300 16 C 400 2, 500 2, 600 16 C 700 30, 800 32, 900 18 C 1000 4, 1110 4, 1200 20"/>
+      </svg>
+    </div>
 
 
     <!-- ===================================================
@@ -276,7 +429,7 @@
 
           <div class="contact-info" data-reveal>
             <span class="t-label">Besuche uns</span>
-            <h2 class="t-h2">Kontakt &amp;<br>Öffnungszeiten</h2>
+            <h2 class="t-h2">Kontakt &amp; Öffnungszeiten</h2>
 
             <!-- data-days = Wochentage der Zeile (0 = Sonntag).
                  js/main.js hebt darüber die heutige Zeile hervor. -->
@@ -284,61 +437,54 @@
               <div class="hours-row" data-days="1,2,3">
                 <span class="hours-days">
                   Montag – Mittwoch
-                  <span class="hours-today-tag">heute</span>
+                  <span class="hours-today-tag">heute<svg class="ink ink--circle" viewBox="0 0 140 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" d="M100 10 C 72 2, 32 5, 15 19 C 4 28, 9 42, 34 50 C 62 59, 112 55, 128 42 C 138 33, 135 20, 116 12 C 108 8, 96 6, 88 7"/></svg></span>
                 </span>
                 <span class="hours-time hours-time--closed">Geschlossen</span>
               </div>
               <div class="hours-row" data-days="4,5">
                 <span class="hours-days">
                   Donnerstag – Freitag
-                  <span class="hours-today-tag">heute</span>
+                  <span class="hours-today-tag">heute<svg class="ink ink--circle" viewBox="0 0 140 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" d="M100 10 C 72 2, 32 5, 15 19 C 4 28, 9 42, 34 50 C 62 59, 112 55, 128 42 C 138 33, 135 20, 116 12 C 108 8, 96 6, 88 7"/></svg></span>
                 </span>
                 <span class="hours-time">10:00 – 18:00</span>
               </div>
               <div class="hours-row" data-days="6,0">
                 <span class="hours-days">
                   Samstag – Sonntag
-                  <span class="hours-today-tag">heute</span>
+                  <span class="hours-today-tag">heute<svg class="ink ink--circle" viewBox="0 0 140 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-draw pathLength="100" d="M100 10 C 72 2, 32 5, 15 19 C 4 28, 9 42, 34 50 C 62 59, 112 55, 128 42 C 138 33, 135 20, 116 12 C 108 8, 96 6, 88 7"/></svg></span>
                 </span>
                 <span class="hours-time">10:00 – 18:00</span>
               </div>
             </div>
             <p class="hours-season-note">
-              <span aria-hidden="true">ℹ</span>
               Saisonbetrieb – aktuelle Öffnungszeiten bitte auf Facebook prüfen.
             </p>
 
             <div class="contact-details">
-              <!-- Icons als Inline-SVG statt Emoji: Emoji sehen auf jedem
-                   Betriebssystem anders aus und fehlen auf manchen ganz. -->
-              <div class="contact-item">
-                <div class="contact-item-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                    <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" stroke-linejoin="round"/>
-                    <circle cx="12" cy="10" r="2.6"/>
-                  </svg>
-                </div>
-                <div class="contact-item-body">
-                  <div class="contact-item-label">Adresse</div>
-                  <div class="contact-item-value">
-                    Weizer Straße 4<br>8200 Gleisdorf, Österreich
-                  </div>
-                </div>
-              </div>
+              <a class="contact-item" href="https://www.openstreetmap.org/?mlat=47.1015&amp;mlon=15.7060#map=17/47.1015/15.7060" target="_blank" rel="noopener">
+                <svg class="ink ink--pin contact-mark" viewBox="0 0 48 62" aria-hidden="true" focusable="false">
+                  <path data-draw pathLength="100" d="M24 57 C 30 46, 39 34, 39 24 C 39 15 32 8 24 8 C 16 8 9 15 9 24 C 9 34 18 46 24 57"/>
+                  <path data-draw pathLength="100" style="--i:1" d="M17 23 C 17 19, 20 16, 24 16 C 28 16, 31 19, 31 23 C 31 27, 28 30, 24 30 C 20 30, 17 27, 17 23"/>
+                  <g class="ink-hatch">
+                    <path d="M12 27 L18 38"/><path d="M17 32 L23 43"/>
+                    <path d="M23 35 L28 44"/><path d="M29 33 L33 40"/><path d="M33 28 L36 33"/>
+                  </g>
+                </svg>
+                <span class="contact-item-body">
+                  <span class="contact-item-label">Adresse</span>
+                  <span class="contact-item-value">Weizer Straße 4<br>8200 Gleisdorf, Österreich</span>
+                </span>
+              </a>
 
-              <div class="contact-item">
-                <div class="contact-item-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                    <path d="M6.2 3.5h3l1.5 3.8-1.9 1.4a11.5 11.5 0 0 0 5.5 5.5l1.4-1.9 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7C10.6 17.8 6.2 13.4 4.5 5.4A1.7 1.7 0 0 1 6.2 3.5Z" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-                <div class="contact-item-body">
-                  <div class="contact-item-label">Telefon</div>
-                  <div class="contact-item-value">
-                    <a href="tel:+436649235042">+43 664 9235042</a>
-                  </div>
-                </div>
-              </div>
+              <a class="contact-item" href="tel:+436649235042">
+                <svg class="ink contact-mark contact-mark--phone" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path data-draw pathLength="100" d="M12 6 C 8 7, 6 11, 7 16 C 10 30, 18 38, 32 41 C 37 42, 41 40, 42 36 C 42 34, 41 33, 39 32 L33 29 C 31 28, 30 29, 29 31 L27 34 C 21 31, 17 27, 14 21 L17 19 C 19 18, 20 17, 19 15 L16 9 C 15 7, 14 6, 12 6"/>
+                </svg>
+                <span class="contact-item-body">
+                  <span class="contact-item-label">Telefon</span>
+                  <span class="contact-item-value">+43 664 9235042</span>
+                </span>
+              </a>
             </div>
 
             <div class="social-links">
@@ -380,10 +526,27 @@
        FOOTER
        =================================================== -->
   <footer class="site-footer" role="contentinfo">
+    <div class="footer-wave ink-wrap" aria-hidden="true">
+      <svg class="ink ink--wave" viewBox="0 0 1200 34" preserveAspectRatio="none" focusable="false">
+        <path d="M0 20 C 90 2, 190 2, 300 16 C 410 30, 500 32, 600 18 C 700 4, 800 2, 900 16 C 1000 30, 1110 30, 1200 14"/>
+      </svg>
+    </div>
+
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#home" class="site-logo">Gelateria <span>Reina</span></a>
+          <a href="#home" class="site-logo">
+            <svg class="ink ink--cone site-logo-mark" viewBox="0 0 56 88" aria-hidden="true" focusable="false">
+              <path d="M11 32 C 8 24, 12 18, 18 17 C 19 10, 28 6, 34 10 C 42 8, 48 15, 46 23 C 49 27, 48 31, 45 32"/>
+              <path d="M10 33 C 21 38, 37 38, 46 31"/>
+              <path d="M13 35 L28 84 L45 34"/>
+              <g class="ink-hatch">
+                <path d="M16 44 L41 40"/><path d="M19 55 L38 51"/>
+                <path d="M22 65 L35 62"/><path d="M25 74 L32 72"/>
+              </g>
+            </svg>
+            <span class="site-logo-text">Gelateria <span>Reina</span></span>
+          </a>
           <p>Hausgemachtes Gelato aus Gleisdorf, täglich frisch und mit Leidenschaft zubereitet.</p>
         </div>
 
@@ -409,9 +572,35 @@
   </footer>
 
 
+  <!-- ===================================================
+       AKTIONSBALKEN — nur am Handy
+
+       Wer unterwegs nach einer Eisdiele sucht, will anrufen oder
+       hinfinden. Erscheint erst, wenn der Hero durch ist
+       (js/main.js → initActionBar()), und ist ab 900px nicht
+       vorhanden. Styling: css/mobile.css
+       =================================================== -->
+  <div class="action-bar" id="action-bar">
+    <a class="action-bar-item" href="tel:+436649235042">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+        <path d="M6.2 3.5h3l1.5 3.8-1.9 1.4a11.5 11.5 0 0 0 5.5 5.5l1.4-1.9 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7C10.6 17.8 6.2 13.4 4.5 5.4A1.7 1.7 0 0 1 6.2 3.5Z" stroke-linejoin="round"/>
+      </svg>
+      Anrufen
+    </a>
+    <a class="action-bar-item" href="https://www.openstreetmap.org/?mlat=47.1015&amp;mlon=15.7060#map=17/47.1015/15.7060" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+        <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" stroke-linejoin="round"/>
+        <circle cx="12" cy="10" r="2.6"/>
+      </svg>
+      Route
+    </a>
+  </div>
+
+
   <!-- JS: main.js zuerst (Nav, Scroll, Öffnungsstatus), dann menu.js -->
   <script src="js/main.js"></script>
   <script src="js/menu.js"></script>
+  <script src="js/video.js"></script>
   <script>
     document.getElementById('footer-year').textContent = new Date().getFullYear();
   </script>

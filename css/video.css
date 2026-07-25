@@ -1,0 +1,125 @@
+/* =========================================================
+   video.css — Video-Sektion mit Click-to-Play-Fassade
+
+   Vor dem Klick ist hier nur ein Bild und ein Knopf. Weder
+   YouTube noch ein Player werden geladen — kein Fremd-Cookie,
+   keine 800 KB Skript für Leute, die gar nicht schauen wollen,
+   und kein Autoplay, das iOS ohnehin blockiert.
+
+   js/video.js tauscht die Fassade beim Klick gegen den echten
+   Player. Quelle steht als data-Attribut im Markup, siehe
+   Kommentar dort.
+   ========================================================= */
+
+.video-section { background: var(--c-bg); }
+
+.video-stage {
+  position: relative;
+  max-width: 56rem;
+  margin-inline: auto;
+  /* Eigener Stapelkontext, damit der gezeichnete Rahmen mit
+     z-index: -1 hinter der Bühne sichtbar bleibt statt hinter dem
+     Section-Hintergrund zu verschwinden. */
+  isolation: isolate;
+}
+
+/* Die Fassade ist ein <button>: sie ist bedienbar, mit der
+   Tastatur erreichbar und meldet sich dem Screenreader als
+   Schaltfläche — anders als ein anklickbares <div>. */
+.video-facade {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--c-ink);
+  padding: 0;
+}
+
+.video-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow), opacity var(--transition);
+}
+
+/* Leichte Abdunklung, damit der Knopf auf jedem Standbild trägt */
+.video-facade::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 15, 12, 0.18);
+  transition: background var(--transition);
+}
+
+.video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--c-white);
+  color: var(--c-accent);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), background var(--transition);
+}
+.video-play svg {
+  width: 26px;
+  height: 26px;
+  /* Optischer Ausgleich: ein Dreieck wirkt mittig gesetzt zu weit
+     links, weil seine Masse rechts fehlt. */
+  margin-left: 4px;
+}
+
+@media (hover: hover) {
+  .video-facade:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
+  .video-facade:hover .video-poster { transform: scale(1.03); }
+  .video-facade:hover::after { background: rgba(20, 15, 12, 0.28); }
+}
+
+/* Gezeichneter Rahmen, versetzt hinter der Bühne */
+.video-frame {
+  margin: -1rem -1rem 1rem 1rem;
+  color: var(--c-accent);
+  z-index: -1;
+}
+
+/* Der eingesetzte Player. Übernimmt Form und Maß der Fassade,
+   damit beim Tausch nichts springt. */
+.video-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--c-ink);
+}
+
+.video-note {
+  display: block;
+  margin-top: var(--space-5);
+  text-align: center;
+}
+
+
+/* =========================================================
+   AB 900px
+   ========================================================= */
+@media (min-width: 900px) {
+  .video-play { width: 84px; height: 84px; }
+  .video-play svg { width: 32px; height: 32px; }
+  .video-frame { margin: -1.5rem -1.5rem 1.5rem 1.5rem; }
+
+  .video-note {
+    text-align: right;
+    margin-top: var(--space-6);
+    padding-right: var(--space-8);
+  }
+}

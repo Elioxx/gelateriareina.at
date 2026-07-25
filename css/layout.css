@@ -1,5 +1,11 @@
 /* =========================================================
    layout.css — Header, Navigation, Footer
+
+   MOBILE FIRST: Grundlayout ist das Handy (Menüknopf sichtbar,
+   Footer einspaltig). Ab 900px kommt die waagrechte Navigation.
+
+   Der Header steht jetzt auf Weiß statt über einem dunklen Foto —
+   der Sonderfall „hell über Hero" ist damit ersatzlos weg.
    ========================================================= */
 
 /* --- Header --- */
@@ -9,17 +15,19 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: var(--space-5) 0;
-  transition: background var(--transition), padding var(--transition),
-              box-shadow var(--transition), border-color var(--transition);
+  /* Notch und abgerundete Ecken am iPhone freihalten */
+  padding: var(--space-3) 0;
+  padding-top: max(var(--space-3), env(safe-area-inset-top));
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid transparent;
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
+/* Erst beim Scrollen bekommt der Header eine Kante — solange die
+   Seite oben steht, soll er mit dem weißen Hero verschmelzen. */
 .site-header.scrolled {
-  background: rgba(251, 249, 245, 0.88);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  padding: var(--space-3) 0;
   border-bottom-color: var(--c-border);
   box-shadow: var(--shadow-sm);
 }
@@ -28,46 +36,42 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
-/* Ohne .scrolled steht der Header über dem dunklen Hero-Foto und
-   muss hell sein. Ab 40px Scroll übernimmt .scrolled die
-   Standardfarben aus den Regeln weiter unten. */
-.site-header:not(.scrolled) .site-logo,
-.site-header:not(.scrolled) .nav-link:hover,
-.site-header:not(.scrolled) .nav-link.active { color: var(--c-white); }
-.site-header:not(.scrolled) .site-logo span  { color: var(--c-accent-bright); }
-.site-header:not(.scrolled) .nav-link        { color: rgba(255, 255, 255, 0.75); }
-.site-header:not(.scrolled) .nav-toggle span { background: var(--c-white); }
-
 /* --- Logo ---
-   Nur die Wortmarke. Ein gezeichnetes Eistüten-Symbol stand hier
-   schon einmal — es konkurrierte im Hero direkt mit dem echten
-   Zeichen auf dem Ladenschild und sah daneben wie eine schlechte
-   Kopie aus. Die Wortmarke allein ist ruhiger und ehrlicher. */
+   Wortmarke plus die gezeichnete Eistüte vom Ladenschild. Sie
+   stand hier schon einmal als flächiges Symbol und sah neben dem
+   echten Zeichen im Hero-Foto wie eine schlechte Kopie aus. Als
+   Federstrich ist sie erkennbar eine Zeichnung und keine
+   Nachahmung — und sie gehört zur selben Familie wie alle anderen
+   Ornamente der Seite. */
 .site-logo {
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.3em;
+  align-items: center;
+  /* Auch die Wortmarke ist ein Link (zurück nach oben) und braucht
+     eine volle Trefferfläche — die Schrifthöhe allein sind 31px. */
+  min-height: var(--tap);
+  gap: 0.45rem;
   font-family: var(--f-display);
-  font-size: 1.25rem;
+  font-size: 1.0625rem;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.2;
   white-space: nowrap;
   color: var(--c-text);
-  transition: color var(--transition), opacity var(--transition);
+  transition: opacity var(--transition);
 }
-.site-logo:hover { opacity: 0.75; }
-.site-logo span { color: var(--c-accent); font-style: italic; }
+.site-logo-mark { width: 20px; flex-shrink: 0; color: var(--c-accent); }
+.site-logo-text span { color: var(--c-accent); font-style: italic; }
 
-/* --- Nav --- */
-.site-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
+@media (hover: hover) {
+  .site-logo:hover { opacity: 0.7; }
 }
+
+/* --- Nav ---
+   Am Handy nicht vorhanden (dafür der Menüknopf), ab 900px sichtbar. */
+.site-nav { display: none; }
 
 .nav-link {
   position: relative;
@@ -93,18 +97,26 @@
   transition: width var(--transition);
 }
 
-.nav-link:hover,
 .nav-link.active { color: var(--c-text); }
-
-.nav-link:hover::after,
 .nav-link.active::after { width: 100%; }
 
-/* --- Mobile-Toggle --- */
+@media (hover: hover) {
+  .nav-link:hover { color: var(--c-text); }
+  .nav-link:hover::after { width: 100%; }
+}
+
+/* --- Menüknopf ---
+   Die Balken sind 24px breit, die Trefferfläche ist es nicht —
+   deshalb feste Mindestgröße statt bloßem Padding. */
 .nav-toggle {
-  display: none;
+  display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
-  padding: var(--space-2);
+  width: var(--tap);
+  height: var(--tap);
+  margin-right: -0.5rem;
 }
 .nav-toggle span {
   display: block;
@@ -125,12 +137,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-6);
+  gap: var(--space-2);
+  /* dvh statt vh: sonst schneidet die iOS-Adressleiste den unteren
+     Menüpunkt ab, sobald sie eingeblendet ist. */
+  height: 100dvh;
+  padding: var(--space-16) var(--space-6);
 }
 
 .nav-mobile.open { display: flex; }
 
 .nav-mobile .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  width: 100%;
+  max-width: 20rem;
   font-family: var(--f-display);
   font-size: var(--text-3xl);
   font-weight: 400;
@@ -141,7 +163,9 @@
   animation: nav-item-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   animation-delay: calc(var(--i, 0) * 60ms + 60ms);
 }
-.nav-mobile .nav-link::after { height: 2px; bottom: 2px; }
+/* Der Unterstrich der Kopfnavigation ergibt bei zentrierten,
+   bildschirmbreiten Einträgen keinen Sinn. */
+.nav-mobile .nav-link::after { display: none; }
 
 @keyframes nav-item-in {
   from { opacity: 0; transform: translateY(14px); }
@@ -150,10 +174,10 @@
 
 .nav-mobile-close {
   position: absolute;
-  top: var(--space-5);
-  right: var(--space-5);
-  width: 44px;
-  height: 44px;
+  top: max(var(--space-4), env(safe-area-inset-top));
+  right: var(--space-4);
+  width: var(--tap);
+  height: var(--tap);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,34 +187,49 @@
   color: var(--c-text-muted);
   transition: color var(--transition), border-color var(--transition);
 }
-.nav-mobile-close:hover { color: var(--c-text); border-color: var(--c-text); }
-
-/* --- Footer --- */
-.site-footer {
-  background: var(--c-ink);
-  color: rgba(255, 255, 255, 0.62);
-  padding: var(--space-20) 0 var(--space-8);
+@media (hover: hover) {
+  .nav-mobile-close:hover { color: var(--c-text); border-color: var(--c-text); }
 }
+
+
+/* --- Footer ---
+   Hell statt schwarz: eine dunkle Fläche am Seitenende hätte das
+   durchgehende Weiß gebrochen, für das die ganze Gestaltung
+   angelegt ist. Die Trennung übernimmt die gezeichnete Welle. */
+.site-footer {
+  position: relative;
+  background: var(--c-bg);
+  color: var(--c-text-muted);
+  padding-bottom: var(--space-8);
+}
+
+.footer-wave {
+  line-height: 0;
+  color: var(--c-accent);
+  opacity: 0.5;
+  margin-bottom: var(--space-12);
+}
+.footer-wave .ink--wave { height: 26px; }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: var(--space-12);
-  padding-bottom: var(--space-12);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
-  margin-bottom: var(--space-8);
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  padding-bottom: var(--space-10);
+  border-bottom: 1px solid var(--c-border);
+  margin-bottom: var(--space-6);
 }
 
 .footer-brand .site-logo {
-  color: var(--c-white);
+  font-size: 1.25rem;
   margin-bottom: var(--space-4);
 }
-.footer-brand .site-logo span { color: var(--c-accent-bright); }
+.footer-brand .site-logo-mark { width: 24px; }
 
 .footer-brand p {
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.48);
-  max-width: 280px;
+  color: var(--c-text-muted);
+  max-width: 300px;
   line-height: 1.75;
 }
 
@@ -200,52 +239,76 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--c-accent-bright);
-  margin-bottom: var(--space-4);
+  color: var(--c-accent-deep);
+  margin-bottom: var(--space-3);
 }
 
 .footer-col p,
 .footer-col a {
   display: block;
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--c-text-muted);
   line-height: 1.9;
   transition: color var(--transition);
 }
-.footer-col a:hover { color: var(--c-white); }
+/* Telefonnummer und Facebook-Link im Footer sind eigenständige
+   Ziele, keine Wörter im Fließtext — also volle Trefferfläche. */
+.footer-col a {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+@media (hover: hover) {
+  .footer-col a:hover { color: var(--c-accent-deep); }
+}
 
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-2);
   font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.30);
+  color: var(--c-text-muted);
+  opacity: 0.8;
 }
 
-/* --- Responsive --- */
-@media (max-width: 768px) {
-  .site-nav { display: none; }
-  .nav-toggle { display: flex; }
 
-  /* Am Handy nahm die Wortmarke über die Hälfte der Bildschirmbreite
-     ein und drängte sich gegen den Menüknopf. */
-  .site-header { padding: var(--space-4) 0; }
-  .site-logo { font-size: 1.0625rem; }
-
+/* =========================================================
+   AB 640px
+   ========================================================= */
+@media (min-width: 640px) {
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-10);
   }
+  .footer-brand { grid-column: 1 / -1; }
 
   .footer-bottom {
-    flex-direction: column;
-    gap: var(--space-2);
-    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
-/* Sehr schmale Geräte (iPhone SE): Wortmarke noch eine Stufe kleiner */
-@media (max-width: 380px) {
-  .site-logo { font-size: 0.9375rem; }
+
+/* =========================================================
+   AB 900px — waagrechte Navigation
+   ========================================================= */
+@media (min-width: 900px) {
+  .site-header { padding: var(--space-4) 0; }
+  .site-logo { font-size: 1.25rem; }
+  .site-logo-mark { width: 24px; }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+  .nav-toggle { display: none; }
+
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-12);
+  }
+  .footer-brand { grid-column: auto; }
+  .footer-wave .ink--wave { height: 34px; }
 }

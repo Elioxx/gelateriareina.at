@@ -1,106 +1,57 @@
 /* =========================================================
-   hero.css — Hero / Startseite
+   hero.css — Startbühne
 
-   Ebenen (z-index):
-     0  .hero-media   Ladenfoto, formatfüllend
-     1  .hero-scrim   warmer dunkler Verlauf für Lesbarkeit
-     2  .hero-inner   Status, Titel, Text, Buttons
-     2  .hero-scroll  Scroll-Hinweis
+   Kein Vollbild-Foto mit dunklem Verlauf mehr. Die Seite gehört
+   dem Weiß; das Ladenfoto ist ein Element darin, kein Hintergrund.
+   Dadurch braucht der Text keinen Scrim, keinen Schlagschatten und
+   keine Deckkraft-Kompromisse — er steht einfach auf Weiß.
 
-   Das Foto läuft in voller Deckkraft — der Verlauf deckt nur so
-   viel ab, wie der Text zum Lesen braucht. Links deckend (dort
-   steht der Text), rechts fast klar (dort steht das Schild).
+   Die Fotoform ist ein BOGEN: oben rund wie ein Türbogen, unten
+   ruhig. Das ist die eine Formentscheidung, die die Seite trägt —
+   sie zitiert italienische Architektur statt Fotos in
+   Browser-Rechtecke zu sperren, und sie ist der Gegenentwurf zu
+   den ausgefransten Aquarellrändern, die man auf anderen
+   Eisdielen-Seiten sieht.
+
+   MOBILE FIRST: gestapelt, Text zuerst. Ab 900px zweispaltig.
    ========================================================= */
 
 .hero {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  /* Eigener Stapelkontext: die Hero-Ebenen bleiben unter dem Header */
-  isolation: isolate;
-  background-color: var(--c-ink);
+  padding-block: calc(var(--header-h) + var(--space-8)) var(--space-10);
+  /* Der Bogen und die Handnotiz ragen leicht über — clip statt
+     hidden, damit kein Scroll-Container entsteht. */
+  overflow: clip;
 }
 
-/* --- Ebene 0: Foto --- */
-.hero-media {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.hero-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Ausschnitt: Schild oben, Eingang mittig — nicht der Gehsteig */
-  object-position: 50% 42%;
-  /* Sehr langsame Fahrt statt Video. Ersetzt die Bewegung, die
-     vorher das Hintergrundvideo geliefert hat, ohne Ladezeit. */
-  animation: hero-drift 26s ease-in-out infinite alternate;
-  transform-origin: 55% 45%;
-}
-
-@keyframes hero-drift {
-  from { transform: scale(1.00); }
-  to   { transform: scale(1.06); }
-}
-
-/* --- Ebene 1: Verlauf --- */
-.hero-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  /* Kräftig genau dort, wo der Text steht (linke Hälfte), und ab der
-     Mitte schnell klar — die sonnige Fassade und das Schild sollen
-     Farbe behalten. Vorher lag ein breiter Schleier über dem ganzen
-     Bild und machte das Foto grau und trüb. */
-  background:
-    linear-gradient(93deg,
-      rgba(23, 17, 13, 0.88) 0%,
-      rgba(23, 17, 13, 0.78) 26%,
-      rgba(23, 17, 13, 0.44) 50%,
-      rgba(23, 17, 13, 0.12) 72%,
-      rgba(23, 17, 13, 0.00) 100%),
-    /* oben für den hellen Header, unten für den Sectionübergang */
-    linear-gradient(to bottom,
-      rgba(23, 17, 13, 0.42) 0%,
-      rgba(23, 17, 13, 0.00) 16%,
-      rgba(23, 17, 13, 0.00) 64%,
-      rgba(23, 17, 13, 0.52) 100%);
-}
-
-/* --- Ebene 2: Inhalt --- */
 .hero-inner {
-  position: relative;
-  z-index: 2;
-  padding-top: var(--space-32);
-  padding-bottom: clamp(5rem, 12vh, 9rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
 }
 
-.hero-content { max-width: 660px; }
+.hero-content { max-width: 34rem; }
 
-/* Status-Pille: beantwortet die eigentliche Frage („kann ich jetzt hin?")
-   noch vor der Überschrift. Text und Zustandsklasse kommen aus
-   js/main.js → initOpeningStatus(). */
+
+/* --- Öffnungsstatus -------------------------------------------
+   Die wichtigste Information der Seite: „kann ich jetzt hin?"
+   Steht deshalb ganz oben, noch vor der Überschrift.
+   Text und Klasse setzt js/main.js → initOpeningStatus(). */
+
 .hero-status {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 0.5rem 1.1rem 0.5rem 0.9rem;
-  margin-bottom: var(--space-8);
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(23, 17, 13, 0.42);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  gap: var(--space-2);
+  padding: 0.45rem 1rem 0.45rem 0.85rem;
+  margin-bottom: var(--space-5);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--c-text);
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
 }
 
 .hero-status::before {
@@ -108,168 +59,232 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  flex-shrink: 0;
   background: var(--c-text-muted);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.10);
+  flex-shrink: 0;
 }
 
-/* Geöffnet: pistaziengrüner Punkt, der ruhig pulsiert */
 .hero-status.is-open::before {
-  background: #8FD07A;
-  box-shadow: 0 0 0 4px rgba(143, 208, 122, 0.22);
-  animation: status-pulse 2.6s ease-in-out infinite;
+  background: #4EA35C;
+  animation: status-pulse 2.4s ease-in-out infinite;
 }
-.hero-status.is-closed::before {
-  background: var(--c-accent-bright);
-  box-shadow: 0 0 0 4px rgba(227, 195, 132, 0.18);
-}
+.hero-status.is-closed::before { background: var(--c-accent); }
 
 @keyframes status-pulse {
-  0%, 100% { box-shadow: 0 0 0 4px  rgba(143, 208, 122, 0.22); }
-  50%      { box-shadow: 0 0 0 8px  rgba(143, 208, 122, 0.05); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(78, 163, 92, 0.5); }
+  60%      { box-shadow: 0 0 0 7px rgba(78, 163, 92, 0); }
 }
+
+
+/* --- Überschrift ---------------------------------------------
+   Fraunces, leicht, sehr eng gesetzt. Das kursive Goldwort bekommt
+   den gezeichneten Schwung (siehe .swash-word in ornaments.css). */
 
 .hero-title {
   font-family: var(--f-display);
   font-size: var(--text-5xl);
   font-weight: 300;
-  line-height: 0.98;
+  /* Etwas Luft zwischen den Zeilen: der gezeichnete Schwung unter
+     „Italienisch." braucht sie, sonst schneidet er in die
+     nächste Zeile. */
+  line-height: 1.14;
   letter-spacing: -0.03em;
-  color: var(--c-white);
-  margin-bottom: var(--space-6);
-  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
+  color: var(--c-text);
+  margin-bottom: var(--space-5);
+  /* Die Zeilen sind per <br> gesetzt; text-wrap: balance würde
+     hier nichts ausgleichen, aber den Schwung neu umbrechen. */
+  text-wrap: initial;
 }
 
 .hero-title em {
   font-style: italic;
   font-weight: 300;
-  color: var(--c-accent-bright);
+  color: var(--c-accent);
 }
 
 .hero-subtitle {
   font-size: var(--text-lg);
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 440px;
-  margin-bottom: var(--space-10);
   line-height: 1.65;
-  text-shadow: 0 1px 20px rgba(0, 0, 0, 0.45);
+  color: var(--c-text-muted);
+  max-width: 30rem;
+  margin-bottom: var(--space-8);
 }
+
+
+/* --- Aktionen ------------------------------------------------
+   Am Handy vollbreit gestapelt: zwei Pillen nebeneinander werden
+   bei 360px so schmal, dass die Beschriftung umbricht. */
 
 .hero-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
+  display: grid;
+  gap: var(--space-3);
 }
 
-/* Zweite Aktion: nur Rahmen, damit die goldene Hauptaktion führt */
-.hero .btn--ghost {
-  border-color: rgba(255, 255, 255, 0.45);
-  color: var(--c-white);
-  background: rgba(23, 17, 13, 0.20);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-}
-.hero .btn--ghost:hover {
-  background: var(--c-white);
-  border-color: var(--c-white);
-  color: var(--c-text);
+@media (min-width: 480px) {
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
 }
 
-/* --- Scroll-Hinweis --- */
-.hero-scroll {
-  position: absolute;
-  z-index: 2;
-  bottom: var(--space-6);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  animation: hero-bounce 2.8s ease-in-out infinite;
+
+/* --- Das Foto im Bogen ---------------------------------------- */
+
+.hero-figure {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  max-width: 22rem;
+  align-self: center;
 }
 
-.hero-scroll-arrow {
-  width: 1px;
-  height: 34px;
-  background: linear-gradient(to bottom, var(--c-accent-bright), transparent);
+.hero-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-paper);
+  /* Der Bogen: oben ein Rund, unten nur leicht gebrochen. Die
+     zweiteilige Schreibweise (horizontal / vertikal) macht das
+     Rund flacher als einen Halbkreis — sonst frisst es das Motiv. */
+  border-radius: 50% 50% var(--radius-lg) var(--radius-lg)
+               / 34% 34% var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow);
 }
 
-@keyframes hero-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(7px); }
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Der Bogen schneidet oben rund ein — der Ausschnitt sitzt
+     deshalb tiefer, damit das Schild nicht in die Rundung gerät
+     und Eingang plus Gastgarten im Bild bleiben. */
+  object-position: 47% 58%;
+  /* Sehr langsame Zoomfahrt — ersetzt die Bewegung, die früher ein
+     Hintergrundvideo lieferte, ohne Ladezeit und Fremd-Embed. */
+  animation: hero-drift 30s ease-in-out infinite alternate;
+  transform-origin: 50% 40%;
 }
 
-/* --- Auftritt beim Laden ---
-   Eine orchestrierte Sequenz statt vier einzelner Effekte:
-   Status → Titel → Text → Buttons, jeweils leicht versetzt. */
+@keyframes hero-drift {
+  from { transform: scale(1.00); }
+  to   { transform: scale(1.07); }
+}
+
+.hero-note {
+  display: block;
+  margin-top: var(--space-4);
+  text-align: center;
+  transform: rotate(-1.5deg);
+  transform-origin: center;
+}
+
+
+/* Ein „Mehr"-Scrollhinweis stand hier schon einmal. Er landete
+   zwischen Textspalte und Bogen und sah dort nach Restposten aus —
+   und die gezeichnete Welle direkt darunter lädt ohnehin
+   deutlicher zum Weiterscrollen ein. */
+
+
+/* --- Auftritt -------------------------------------------------
+   Gestaffelt von oben nach unten. backwards, damit die Elemente
+   vor ihrer Verzögerung nicht kurz aufblitzen. */
+
 .hero-status,
 .hero-title,
 .hero-subtitle,
-.hero-actions {
+.hero-actions,
+.hero-figure {
   animation: hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
-.hero-status   { animation-delay: 0.15s; }
-.hero-title    { animation-delay: 0.28s; }
-.hero-subtitle { animation-delay: 0.44s; }
-.hero-actions  { animation-delay: 0.58s; }
+.hero-status   { animation-delay: 0.10s; }
+.hero-title    { animation-delay: 0.22s; }
+.hero-subtitle { animation-delay: 0.36s; }
+.hero-actions  { animation-delay: 0.48s; }
+.hero-figure   { animation-delay: 0.60s; }
 
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-  .hero-inner { text-align: center; }
-  .hero-content { max-width: 100%; }
-  .hero-subtitle { max-width: 520px; margin-inline: auto; }
-  .hero-actions { justify-content: center; }
 
-  /* Der Text steht jetzt mittig über dem ganzen Bild — deshalb ein
-     gleichmäßiger Schleier statt des seitlichen Verlaufs. */
-  /* Der Text steht mittig über dem ganzen Bild, also ein Schleier
-     statt des seitlichen Verlaufs. Oben bleibt er dünn, damit Schild
-     und Zeichen sichtbar sind; ab der Überschrift wird er kräftiger,
-     weil Fließtext und Buttons sonst über der hellen Fensterfront
-     und den Stühlen stehen und kaum lesbar sind. */
-  .hero-scrim {
-    background: linear-gradient(180deg,
-      rgba(23, 17, 13, 0.52) 0%,
-      rgba(23, 17, 13, 0.32) 20%,
-      rgba(23, 17, 13, 0.56) 38%,
-      rgba(23, 17, 13, 0.72) 62%,
-      rgba(23, 17, 13, 0.80) 100%);
+/* =========================================================
+   AB 640px — mehr Luft, größerer Bogen
+   ========================================================= */
+@media (min-width: 640px) {
+  .hero-figure { max-width: 26rem; }
+}
+
+
+/* =========================================================
+   AB 900px — zweispaltig
+
+   Text links, Bogen rechts. Die Spalten sind bewusst ungleich:
+   ein symmetrisches 1:1 wirkt wie ein Baukasten.
+   ========================================================= */
+@media (min-width: 900px) {
+  .hero {
+    padding-block: calc(var(--header-h) + var(--space-16)) var(--space-16);
   }
+
+  .hero-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+
+  .hero-content {
+    flex: 1 1 52%;
+    max-width: 36rem;
+  }
+
+  .hero-figure {
+    flex: 1 1 48%;
+    max-width: none;
+  }
+
+  .hero-photo {
+    aspect-ratio: 3 / 4;
+    max-height: 34rem;
+    /* Leicht aus der Achse: der Bogen sitzt einen Hauch tiefer als
+       die Textmitte, das nimmt dem Raster die Strenge. */
+    margin-top: var(--space-6);
+  }
+
+  .hero-note {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -2.5rem;
+    margin-top: 0;
+    text-align: right;
+    transform: rotate(-2.5deg);
+  }
+
 }
 
-@media (max-width: 640px) {
-  /* Hochformat schneidet seitlich sehr stark: bei 390px Breite ist
-     nur rund ein Drittel des Fotos zu sehen. Der Ausschnitt liegt
-     deshalb tiefer auf Eingang und Gästen statt auf dem Dachrand
-     der Nachbarfassade, der vorher oben als grauer Streifen stand. */
-  .hero-img { object-position: 38% 58%; }
-  .hero-subtitle { font-size: var(--text-base); }
-  .hero-actions .btn { width: 100%; }
-  .hero-scroll { display: none; }
+
+/* =========================================================
+   AB 1200px
+   ========================================================= */
+@media (min-width: 1200px) {
+  .hero-photo { max-height: 38rem; }
 }
 
-/* --- Reduzierte Bewegung ---
-   Kein Drift, kein Puls, kein Auftritt. Das Foto steht still.
-   (Die globale Regel in base.css kürzt Transitions; Animationen
-   mit Endzustand müssen zusätzlich abgeschaltet werden.) */
+
+/* --- Reduzierte Bewegung -------------------------------------
+   base.css kürzt global die Dauer, aber Animationen mit
+   backwards-Endzustand müssen zusätzlich ganz abgeschaltet
+   werden — sonst bleibt der Startzustand stehen. Wer hier eine
+   Animation ergänzt, trägt sie in diesen Block mit ein.
+   (Konvention dokumentiert in css/CLAUDE.md.) */
 @media (prefers-reduced-motion: reduce) {
-  .hero-img { animation: none; transform: none; }
-  .hero-scroll { animation: none; }
-  .hero-status.is-open::before { animation: none; }
+  .hero-img       { animation: none; transform: none; }
   .hero-status,
   .hero-title,
   .hero-subtitle,
-  .hero-actions { animation: none; opacity: 1; transform: none; }
+  .hero-actions,
+  .hero-figure    { animation: none; opacity: 1; transform: none; }
+  .hero-status.is-open::before { animation: none; }
+  .hero-note      { transform: none; }
 }

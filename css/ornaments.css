@@ -1,0 +1,231 @@
+/* =========================================================
+   ornaments.css — das gezeichnete Gold
+
+   Alle verspielten Elemente der Seite sind Inline-SVG im
+   Federstrich-Stil: dünne, leicht zittrige Linien, sparsame
+   Schraffur, keine Flächen. Sie zeichnen sich beim Scrollen
+   selbst.
+
+   WARUM INLINE UND KEIN SPRITE:
+   <use> auf ein externes (oder auch nur ein eigenes <symbol>)
+   erzeugt einen Shadow-Tree. Vererbbare Eigenschaften kommen dort
+   an, stroke-dasharray/-dashoffset pro Pfad aber nicht — genau die
+   brauchen wir. Deshalb steht jedes Ornament dort im Markup, wo es
+   hingehört.
+
+   MARKUP-MUSTER:
+     <svg class="ink ink--swash" viewBox="0 0 200 24"
+          aria-hidden="true" focusable="false">
+       <path data-draw pathLength="100" d="…"/>
+     </svg>
+
+   pathLength="100" normiert jede Pfadlänge auf 100. Dadurch
+   funktioniert ein einziger dasharray-Wert für alle Ornamente,
+   egal wie lang der Pfad tatsächlich ist. Ohne das müsste man
+   jede Länge einzeln ausmessen.
+   ========================================================= */
+
+/* --- Grundform ---------------------------------------------- */
+
+.ink {
+  display: block;
+  color: var(--c-accent);
+  pointer-events: none;
+}
+
+/* Gilt für JEDEN Pfad, nicht nur die animierten: Ornamente ohne
+   [data-draw] (Logo, Footer-Welle) sollen genauso aussehen, nur
+   eben ohne Zeichenbewegung. */
+.ink path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ink-w, 1.6);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Entscheidend fürs Handy: die Strichstärke bleibt in CSS-Pixeln
+     stehen, egal wie klein das SVG skaliert oder wie stark der
+     viewBox verzerrt wird (preserveAspectRatio="none"). Ohne das
+     werden Schraffuren bei 390 px zu grauem Matsch und gestreckte
+     Rahmen bekommen unterschiedlich dicke Kanten. */
+  vector-effect: non-scaling-stroke;
+}
+
+/* Schraffur ist Beiwerk und darf nie so laut sein wie die Kontur */
+.ink .ink-hatch path { opacity: 0.62; stroke-width: var(--ink-w-hatch, 1.2); }
+
+/* Deko darf über Kanten hinausragen, ohne die Seite breiter zu
+   machen. clip statt hidden: erzeugt keinen Scroll-Container. */
+.ink-wrap { overflow: clip; }
+
+
+/* --- Die Zeichenbewegung -------------------------------------
+   Hängt am bestehenden Reveal-System aus js/main.js: sobald ein
+   Vorfahre mit [data-reveal] die Klasse .revealed bekommt, laufen
+   die Striche los. Kein eigenes JavaScript nötig.
+
+   An .js gekoppelt wie die Reveal-Regel in index.html: ohne
+   JavaScript wird nichts versteckt, sonst blieben die Ornamente
+   für immer unsichtbar. */
+
+.js .ink path[data-draw] {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.js [data-reveal].revealed .ink path[data-draw],
+.js .ink--autodraw path[data-draw] {
+  animation: ink-draw var(--ink-dur, 0.85s) cubic-bezier(0.4, 0, 0.25, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Der Hero wartet auf keinen Scroll — er ist ja schon da. Der
+   Schwung zeichnet sich nach dem Auftritt der Überschrift
+   (siehe hero-rise in hero.css, letzte Stufe bei 0.58s). */
+.js .ink--autodraw path[data-draw] {
+  animation-delay: calc(1.15s + var(--i, 0) * 180ms);
+}
+
+@keyframes ink-draw { to { stroke-dashoffset: 0; } }
+
+/* Ab Tablet darf es etwas länger und gestaffelter sein. Am Handy
+   wird schnell gescrollt — lange Animationen hinken dem Daumen
+   hinterher und man sieht nur halb gezeichnete Striche. */
+@media (min-width: 900px) {
+  .js [data-reveal].revealed .ink path[data-draw] {
+    animation-duration: var(--ink-dur, 1.1s);
+    animation-delay: calc(var(--i, 0) * 150ms);
+  }
+}
+
+
+/* --- Die einzelnen Ornamente ---------------------------------
+   Jedes bringt seine eigene Größe mit. Breiten in ch bzw. em, wo
+   das Ornament zu Text gehört — dann wächst es mit der Schrift
+   statt gegen sie. */
+
+/* Unterstreichungsschwung unter kursiven Akzentwörtern.
+   Sitzt absolut unter dem Wort, deshalb braucht der Träger
+   position: relative (siehe .swash-word). */
+.swash-word {
+  position: relative;
+  display: inline-block;
+}
+/* Der Schwung muss in die Zeilenlücke passen, nicht in die nächste
+   Zeile hineinlaufen. Deshalb feste, kleine Höhe in em statt
+   height:auto — das SVG trägt preserveAspectRatio="none", die
+   Kurve wird also flachgedrückt statt mitzuwachsen. Die
+   Strichstärke bleibt dank non-scaling-stroke gleich. */
+.ink--swash {
+  position: absolute;
+  left: -0.03em;
+  top: 100%;
+  width: 105%;
+  height: 0.3em;
+  margin-top: -0.22em;
+  color: var(--c-accent);
+}
+
+/* Eistüte — die Marke, abgeleitet vom Logo auf dem Ladenschild */
+.ink--cone { width: 44px; height: auto; }
+
+/* Gelato-Spirale, Auftakt der Sortensektion */
+.ink--scoop { width: 52px; height: auto; }
+
+/* Ornament über einem Sektionskopf. Am Handy linksbündig wie der
+   Kopf selbst, ab 900px mittig — sonst steht es allein daneben. */
+.section-mark { margin-bottom: var(--space-4); }
+@media (min-width: 900px) {
+  .section-mark { margin-inline: auto; }
+}
+
+/* Krummer Pfeil. Zeigt auf genau eine Sache — nie mehrere
+   gleichzeitig, sonst wird aus Hinweis Dekoration. */
+.ink--arrow { width: 46px; height: auto; }
+
+/* Wellige Trennlinie zwischen Sektionen. Skaliert proportional
+   mit der Breite: am Handy dadurch von selbst flacher. */
+.ink--wave { width: 100%; height: auto; opacity: 0.75; }
+
+.wave-divider {
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+/* Kringel um ein Wort („heute"). preserveAspectRatio="none" im
+   Markup: der Kringel legt sich um beliebig breite Wörter, die
+   Strichstärke bleibt dank non-scaling-stroke gleich. */
+.ink--circle {
+  position: absolute;
+  inset: -0.5em -0.75em -0.4em;
+  width: auto;
+  height: auto;
+}
+
+/* Standortnadel mit Schraffur */
+.ink--pin { width: 40px; height: auto; }
+
+/* Gezeichneter Rahmen hinter Fotos und der Video-Fassade.
+
+   width/height müssen HIER stehen: ein <svg> ohne width/height-
+   Attribut ist ein ersetztes Element mit der Standardgröße
+   300×150. Über inset allein bekommt es die nicht — der Rahmen
+   bräche dann nach 150px einfach ab.
+
+   Der Versatz läuft deshalb über margin (siehe .about-frame,
+   .video-frame): Größe bleibt 100%, die Lage verschiebt sich. */
+.ink--frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  --ink-w: 1.6;
+}
+
+/* Schnörkelpaar und Funken sind die feinsten Ornamente. Sie
+   verlieren beim Verkleinern ihre Form — deshalb am Handy nicht
+   verkleinern, sondern weglassen. */
+.ink--flourish,
+.ink--sparkle { display: none; }
+
+@media (min-width: 900px) {
+  .ink--flourish { display: block; width: 58px; height: auto; opacity: 0.85; }
+  .ink--sparkle  { display: block; width: 26px; height: auto; opacity: 0.7; }
+}
+
+
+/* --- Handgeschriebene Zeilen ---------------------------------
+   Caveat, in Gold, leicht aus der Achse gedreht. Sparsam
+   einsetzen: die Wirkung lebt davon, dass es die Ausnahme ist. */
+
+.hand-note {
+  font-family: var(--f-hand);
+  font-size: clamp(1.125rem, 0.95rem + 0.8vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--c-accent);
+  display: inline-block;
+  transform: rotate(-2.5deg);
+  transform-origin: left center;
+}
+
+.hand-note--right {
+  transform: rotate(2deg);
+  transform-origin: right center;
+}
+
+
+/* --- Reduzierte Bewegung -------------------------------------
+   Die globale Regel in base.css kürzt zwar die Dauer, nicht aber
+   die Verzögerung — die Striche erschienen sonst erst nach bis zu
+   einer halben Sekunde aus dem Nichts. Hier deshalb explizit:
+   alles sofort und vollständig gezeichnet. */
+@media (prefers-reduced-motion: reduce) {
+  .js .ink path[data-draw] {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none !important;
+    animation-delay: 0s !important;
+  }
+  .hand-note { transform: none; }
+}

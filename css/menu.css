@@ -5,45 +5,87 @@
    Farbe als Kugel (--scoop, kommt aus data/menu.json über
    js/menu.js). Die Farbe ist keine Deko — sie zeigt, wie die
    Kugel aussieht, und macht die Liste auf einen Blick lesbar.
+   Das ist der eigene Einfall dieser Seite und bleibt.
+
+   MOBILE FIRST: eine Sorte pro Zeile, Kategorien als wischbare
+   Leiste. Ab 640px zwei Spalten, ab 900px drei.
    ========================================================= */
 
 .menu-section { background: var(--c-bg); }
 
-/* --- Kategorie-Tabs --- */
-.menu-tabs {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-10);
-  flex-wrap: wrap;
+
+/* --- Kategorie-Tabs als Wisch-Leiste --------------------------
+   Drei Kategorien brechen bei 390px um und sehen dann kaputt aus.
+   Stattdessen eine Leiste, die waagrecht gewischt wird und
+   einrastet. Der Verlauf am rechten Rand zeigt, dass es
+   weitergeht — ohne dass man eine Scrollbar sieht. */
+
+.menu-tabs-wrap {
+  position: relative;
+  margin-bottom: var(--space-8);
+  /* Bis an den Bildschirmrand ziehen, damit das Wischen sich nicht
+     wie ein eingesperrtes Kästchen anfühlt. */
+  margin-inline: calc(clamp(1.25rem, 5vw, 4rem) * -1);
 }
 
+/* Verlauf als Wisch-Hinweis. pointer-events: none, sonst schluckt
+   er Tipper auf den letzten Tab. */
+.menu-tabs-wrap::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  width: 3rem;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--c-bg));
+}
+
+.menu-tabs {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: clamp(1.25rem, 5vw, 4rem);
+  padding: 0.25rem clamp(1.25rem, 5vw, 4rem);
+  /* Scrollbar verstecken — die Leiste soll wie Papier wirken */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.menu-tabs::-webkit-scrollbar { display: none; }
+
 .menu-tab {
-  padding: 0.6rem 1.5rem;
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  min-height: var(--tap);
+  padding: 0.6rem 1.35rem;
   font-family: var(--f-sans);
   font-size: var(--text-sm);
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--c-text-muted);
   background: transparent;
   border: 1px solid var(--c-border);
   border-radius: var(--radius-pill);
   transition: color var(--transition), background var(--transition),
-              border-color var(--transition), box-shadow var(--transition);
-}
-
-.menu-tab:hover {
-  border-color: var(--c-accent);
-  color: var(--c-accent);
+              border-color var(--transition);
 }
 
 .menu-tab.active {
   background: var(--c-text);
   border-color: var(--c-text);
-  color: var(--c-bg);
-  box-shadow: var(--shadow-sm);
+  color: var(--c-white);
 }
+
+@media (hover: hover) {
+  .menu-tab:hover {
+    border-color: var(--c-accent);
+    color: var(--c-accent-deep);
+  }
+  .menu-tab.active:hover { color: var(--c-white); border-color: var(--c-text); }
+}
+
 
 /* --- Panels --- */
 .menu-panel { display: none; }
@@ -54,12 +96,10 @@
    waren nur Schmuck und sind deshalb weg. */
 .menu-category-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-10);
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
   flex-wrap: wrap;
-  text-align: center;
 }
 
 .menu-category-desc {
@@ -75,40 +115,38 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--c-accent);
+  color: var(--c-accent-deep);
   padding: 0.25rem 0.7rem;
   border: 1px solid var(--c-accent-light);
   border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
-/* --- Vitrine: Sortenraster --- */
+
+/* --- Vitrine: Sortenraster ------------------------------------
+   Ohne Kartenrahmen. Auf reinweißem Grund wirkt jedes Kästchen
+   sofort wie ein Formular — die Trennung übernimmt eine feine
+   Linie, den Rhythmus die Kugel. */
+
 .flavor-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: 1fr;
+  gap: 0;
 }
 
 .flavor-card {
   --scoop: var(--c-accent-light);  /* Rückfallfarbe, falls in der
                                       JSON keine Farbe gesetzt ist */
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-4);
-  padding: var(--space-5);
-  background: var(--c-bg-card);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
-  transition: border-color var(--transition), box-shadow var(--transition),
-              transform var(--transition);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--c-border);
+  transition: transform var(--transition);
 }
-
-.flavor-card:hover {
-  border-color: var(--c-accent-light);
-  border-color: color-mix(in srgb, var(--scoop) 60%, var(--c-border));
-  box-shadow: var(--shadow);
-  transform: translateY(-3px);
-}
+/* Die letzte Trennlinie ist überflüssig — darunter kommt ohnehin
+   der Abstand zur nächsten Gruppe. */
+.flavor-grid .flavor-card:last-child { border-bottom: none; }
 
 /* Die Kugel. Der radiale Verlauf setzt ein Glanzlicht oben links,
    damit die Fläche als Kugel liest und nicht als Punkt. Der innere
@@ -116,8 +154,8 @@
 .flavor-scoop {
   position: relative;
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background:
     radial-gradient(circle at 34% 28%,
@@ -126,43 +164,45 @@
       rgba(255, 255, 255, 0) 62%),
     var(--scoop);
   box-shadow:
-    inset 0 0 0 1px rgba(33, 26, 21, 0.10),
-    inset 0 -6px 12px -6px rgba(33, 26, 21, 0.28),
-    0 4px 10px -4px rgba(33, 26, 21, 0.30);
+    inset 0 0 0 1px rgba(26, 21, 18, 0.10),
+    inset 0 -6px 12px -6px rgba(26, 21, 18, 0.28),
+    0 4px 10px -5px rgba(26, 21, 18, 0.28);
   transition: transform var(--transition);
 }
-
-.flavor-card:hover .flavor-scoop { transform: scale(1.07) rotate(-4deg); }
 
 .flavor-body { min-width: 0; }
 
 .flavor-name {
   font-family: var(--f-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--c-text);
-  margin-bottom: var(--space-1);
+  margin-bottom: 0.1rem;
 }
 
 .flavor-desc {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .flavor-badge {
   display: inline-block;
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   padding: 0.15rem 0.6rem;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #5F7A48;
+  color: #5A7343;
   background: rgba(143, 168, 114, 0.14);
   border: 1px solid rgba(143, 168, 114, 0.35);
   border-radius: var(--radius-pill);
+}
+
+@media (hover: hover) {
+  .flavor-card:hover .flavor-scoop { transform: scale(1.09) rotate(-5deg); }
 }
 
 /* Gestaffeltes Einblenden der Karten — die Verzögerung setzt
@@ -177,37 +217,33 @@
   to   { opacity: 1; transform: none; }
 }
 
+
 /* --- Extras --- */
 .menu-extras {
-  margin-top: var(--space-16);
-  padding-top: var(--space-12);
+  margin-top: var(--space-12);
+  padding-top: var(--space-10);
   border-top: 1px solid var(--c-border);
-  text-align: center;
 }
 
-.menu-extras .t-label { display: block; margin-bottom: var(--space-8); }
+.menu-extras .t-label { display: block; margin-bottom: var(--space-6); }
 
 .extras-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-4);
-  max-width: 780px;
-  margin-inline: auto;
 }
 
 .extra-item {
-  padding: var(--space-6) var(--space-4);
-  background: var(--c-bg-soft);
-  border-radius: var(--radius-lg);
-  transition: transform var(--transition), box-shadow var(--transition);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--c-border);
 }
-.extra-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.extras-grid .extra-item:last-child { border-bottom: none; padding-bottom: 0; }
 
 .extra-name {
   font-family: var(--f-display);
   font-size: var(--text-lg);
   font-weight: 500;
-  margin-bottom: var(--space-1);
+  margin-bottom: 0.1rem;
 }
 
 .extra-note {
@@ -216,19 +252,58 @@
 }
 
 .menu-note {
-  text-align: center;
-  margin-top: var(--space-10);
+  margin-top: var(--space-8);
   font-size: var(--text-sm);
   color: var(--c-text-muted);
   font-style: italic;
 }
 
-/* --- Responsive --- */
-@media (max-width: 640px) {
-  /* Einspaltig statt zweispaltig: die Kugel plus zwei Textzeilen
-     brauchen die Breite, sonst bricht jeder Sortenname um. */
-  .flavor-grid { grid-template-columns: 1fr; gap: var(--space-3); }
-  .flavor-card { padding: var(--space-4); gap: var(--space-3); }
-  .flavor-scoop { width: 44px; height: 44px; }
-  .menu-category-header { gap: var(--space-3); }
+
+/* =========================================================
+   AB 640px — zwei Spalten, Tab-Leiste bleibt wischbar
+   ========================================================= */
+@media (min-width: 640px) {
+  .flavor-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-8);
+    row-gap: var(--space-2);
+  }
+
+  /* Im Raster fransen die Trennlinien aus: die letzte Reihe ist
+     selten voll, und dann hört der Strich mittendrin auf. Ab hier
+     trennt der Abstand, nicht die Linie. */
+  .flavor-card { border-bottom: none; padding-block: var(--space-3); }
+
+  .extras-grid { grid-template-columns: repeat(3, 1fr); }
+  .extra-item  { border-bottom: none; padding-bottom: 0; }
+}
+
+
+/* =========================================================
+   AB 900px — drei Spalten, Tabs mittig ohne Wischen
+   ========================================================= */
+@media (min-width: 900px) {
+  .menu-tabs-wrap {
+    margin-inline: 0;
+    margin-bottom: var(--space-10);
+  }
+  .menu-tabs-wrap::after { display: none; }
+
+  .menu-tabs {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-inline: 0;
+  }
+
+  .menu-category-header {
+    justify-content: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .flavor-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .menu-extras { text-align: center; }
+  .extras-grid { max-width: 780px; margin-inline: auto; }
+  .menu-note   { text-align: center; }
 }

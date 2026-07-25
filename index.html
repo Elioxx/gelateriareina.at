@@ -17,6 +17,11 @@
   <!-- Hero-Bild vorladen: es ist das LCP-Element der Seite -->
   <link rel="preload" as="image" href="assets/images/hero-eisdiele-front.webp" fetchpriority="high">
 
+  <!-- Video-Embed im Hero (youtube-nocookie): Verbindung früh aufbauen,
+       aber ohne preload — das Hero-Foto behält Priorität. -->
+  <link rel="preconnect" href="https://www.youtube-nocookie.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
+
   <!-- CSS: base must come first (defines variables used by others) -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -104,7 +109,25 @@
           </div>
         </div>
 
-        <!-- Das Hero-Foto liegt als background-image auf .hero (siehe css/hero.css) -->
+        <!-- Video in der zweiten Grid-Spalte — dort war bisher nur das Hero-Foto
+             (background-image auf .hero, siehe css/hero.css) zu sehen. Der weiße
+             Kartenrahmen setzt das Video vom Foto ab und hält die Bildunterschrift
+             lesbar. youtube-nocookie: kein Tracking-Cookie ohne Interaktion. -->
+        <figure class="hero-media">
+          <div class="hero-media-frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/53C8ecrirbI?rel=0"
+              title="Gelateria Reina – so entsteht unser Gelato"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+          <figcaption class="hero-media-caption">
+            <span class="t-label">Im Video</span>
+            Ein Blick in die Herstellung – täglich frisch bei uns im Lokal.
+          </figcaption>
+        </figure>
       </div>
 
       <div class="hero-scroll" aria-hidden="true">

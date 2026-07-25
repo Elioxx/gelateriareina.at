@@ -106,6 +106,49 @@
   background: var(--c-accent);
 }
 
+/* --- Video (zweite Grid-Spalte) ---
+   Liegt als weiße Karte über dem Hero-Foto, gleiche Sprache wie die
+   Galerie-Kacheln: 1px Rahmen, sanfter Schatten, Caption unter dem Bild. */
+.hero-media {
+  justify-self: end;
+  width: 100%;
+  max-width: 480px;
+  padding: var(--space-3);
+  background: var(--c-bg-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.hero-media-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--c-bg-soft);
+}
+
+.hero-media-frame iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.hero-media-caption {
+  padding: var(--space-3) var(--space-1) var(--space-1);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+.hero-media-caption .t-label {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
 /* Scroll hint */
 .hero-scroll {
   position: absolute;
@@ -138,12 +181,21 @@
 @media (max-width: 1024px) {
   .hero .container {
     grid-template-columns: 1fr;
+    gap: var(--space-12);
     text-align: center;
+    /* Platz für den Scroll-Hinweis, der einspaltig unter dem Video landet */
+    padding-bottom: 5rem;
   }
   .hero-content { max-width: 100%; }
   .hero-subtitle { max-width: 100%; }
   .hero-eyebrow { justify-content: center; }
   .hero-actions { justify-content: center; }
+
+  /* Video rutscht unter den Text und wird zentriert */
+  .hero-media {
+    justify-self: center;
+    max-width: 560px;
+  }
 
   /* Einspaltig steht der Text über dem ganzen Foto — deshalb hier ein
      gleichmäßiger Schleier statt des seitlichen Verlaufs. */
@@ -152,6 +204,19 @@
       rgba(250, 250, 247, 0.94) 0%,
       rgba(250, 250, 247, 0.90) 55%,
       rgba(243, 237, 230, 0.55) 100%);
+  }
+}
+
+/* Auf Handy-Breiten schmaler, damit das Video nicht die ganze Spalte
+   dominiert und der Text darüber weiter im Blick bleibt. */
+@media (max-width: 768px) {
+  .hero-media {
+    max-width: 420px;
+    padding: var(--space-2);
+  }
+  .hero-media-caption {
+    padding: var(--space-2) var(--space-1) 0;
+    font-size: var(--text-xs);
   }
 }
 

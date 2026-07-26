@@ -24,13 +24,12 @@
   });
 
   /* ── Öffnungszeiten / Status ────────────────────────────── */
-  // 0 = Sonntag … 6 = Samstag; null = geschlossen
+  // 0 = Sonntag … 6 = Samstag
   const OPENING_HOURS = {
-    0: [10, 18], // So
-    1: null, 2: null, 3: null,
-    4: [10, 18], // Do
-    5: [10, 18], // Fr
-    6: [10, 18], // Sa
+    0: [12, 21], // So
+    1: [12, 21], // Mo
+    2: [11, 21], 3: [11, 21], 4: [11, 21],
+    5: [11, 21], 6: [11, 21],
   };
 
   const status = document.getElementById('hero-status');
@@ -58,7 +57,7 @@
       const hours = OPENING_HOURS[now.getDay()];
       if (!hours) {
         status.classList.add('is-closed');
-        statusText.textContent = 'Heute geschlossen · ab Donnerstag wieder für euch da';
+        statusText.textContent = 'Heute geschlossen';
         return;
       }
       const [from, to] = hours;
@@ -70,7 +69,7 @@
         status.classList.add('is-closed');
         statusText.textContent = h < from
           ? `Heute ab ${from}:00 Uhr geöffnet`
-          : 'Heute geschlossen · morgen ab 10:00 Uhr';
+          : `Geschlossen · morgen ab ${OPENING_HOURS[(now.getDay() + 1) % 7][0]}:00 Uhr`;
       }
     } catch (_) { /* Fallback-Text aus dem HTML bleibt stehen */ }
   };
@@ -97,6 +96,21 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     revealTargets.forEach((el) => io.observe(el));
+  }
+
+  /* ── Hero-Parallax (fein, nur Desktop) ──────────────────── */
+  const heroImg = document.querySelector('.hero-arch img');
+  const fine = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (heroImg && fine) {
+    let ticking = false;
+    const parallax = () => {
+      const y = Math.min(window.scrollY, 600);
+      heroImg.style.transform = `translateY(${y * 0.07}px)`;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(parallax); ticking = true; }
+    }, { passive: true });
   }
 
   /* ── Jahr im Footer ─────────────────────────────────────── */

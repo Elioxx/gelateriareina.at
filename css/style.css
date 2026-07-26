@@ -276,6 +276,10 @@ p { margin: 0 0 1em; }
   overflow-y: hidden;               /* kein vertikales Mitschieben am Handy */
   touch-action: pan-x;              /* Browser soll nur horizontal wischen */
   /* kein scroll-snap: der Endless-Loop scrollt kontinuierlich */
+  /* scroll-behavior muss auto sein — html hat smooth, das wuerde
+     die rAF-scrollLeft-Sets in Safari in Smooth-Animationen
+     verwandeln, die sich gegenseitig abbrechen. */
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   box-shadow: var(--shadow);

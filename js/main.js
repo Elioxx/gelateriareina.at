@@ -158,16 +158,23 @@
       let paused = false;
       let visible = false;
       let resumeTimer = null;
+      // Position als Float halten: scrollLeft rundet auf Integer,
+      // bei 25px/s * 16ms = 0.4px pro Frame wuerde sich ohne
+      // Float-Akkumulation nie Bewegung ergeben (Rundung frisst
+      // die Differenz). User-Scroll wird beim Resume uebernommen.
+      let pos = 0;
+      let posInit = false;
 
       const tick = (now) => {
         rafId = null;
         if (paused || !visible || halfWidth <= 0) return;
         const dt = Math.min(now - lastTime, 100); // Tab-Wechsel abfangen
         lastTime = now;
-        let next = row.scrollLeft + (SPEED_PX_PER_SEC * dt) / 1000;
+        if (!posInit) { pos = row.scrollLeft; posInit = true; }
+        pos += (SPEED_PX_PER_SEC * dt) / 1000;
         // Nahtlos auf Anfang zurueck, wenn die Klon-Haelfte erreicht ist
-        if (next >= halfWidth) next -= halfWidth;
-        row.scrollLeft = next;
+        if (pos >= halfWidth) pos -= halfWidth;
+        row.scrollLeft = pos;
         rafId = requestAnimationFrame(tick);
       };
 
@@ -186,6 +193,7 @@
         clearTimeout(resumeTimer);
         resumeTimer = setTimeout(() => {
           paused = false;
+          posInit = false; // User hat evtl. manuell gescrollt — Position neu uebernehmen
           start();
         }, 4000); // nach 4s Ruhe weiter
       };
@@ -194,7 +202,7 @@
       row.addEventListener('touchstart', pauseTemporarily, { passive: true });
       row.addEventListener('wheel', pauseTemporarily, { passive: true });
       row.addEventListener('mouseenter', () => { paused = true; stop(); });
-      row.addEventListener('mouseleave', () => { paused = false; start(); });
+      row.addEventListener('mouseleave', () => { paused = false; posInit = false; start(); });
 
       // Sichtbarkeit: IntersectionObserver reicht bei sehr breiten
       // Rows nicht aus (threshold bezieht sich auf die ganze Fläche).

@@ -123,7 +123,7 @@
   // Pausiert bei Berührung/Hover, reduced-motion und wenn nicht
   // sichtbar. Läuft auf Mobile UND Desktop.
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const SPEED_PX_PER_SEC = 35;
+    const SPEED_PX_PER_SEC = 25;
     document.querySelectorAll('.vitrine-row').forEach((row) => {
       // Karten so oft klonen, bis die Reihe mindestens doppelt so breit
       // ist wie der Viewport — erst dann gibt es einen nahtlosen Loop.
@@ -196,16 +196,29 @@
       row.addEventListener('mouseenter', () => { paused = true; stop(); });
       row.addEventListener('mouseleave', () => { paused = false; start(); });
 
+      // Sichtbarkeit: IntersectionObserver reicht bei sehr breiten
+      // Rows nicht aus (threshold bezieht sich auf die ganze Fläche).
+      // Zusaetzlich manuell pruefen beim Scrollen.
+      const checkVisible = () => {
+        const rect = row.getBoundingClientRect();
+        visible = rect.top < window.innerHeight && rect.bottom > 0;
+        visible ? start() : stop();
+      };
+      checkVisible();
+      window.addEventListener('scroll', checkVisible, { passive: true });
+      window.addEventListener('resize', checkVisible, { passive: true });
+
       if ('IntersectionObserver' in window) {
         new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
-            visible = entry.isIntersecting;
-            visible ? start() : stop();
+            // Bei sehr breiten Elementen: isIntersecting reicht,
+            // nicht auf threshold verlassen
+            if (entry.isIntersecting) {
+              visible = true;
+              start();
+            }
           });
-        }, { threshold: 0.2 }).observe(row);
-      } else {
-        visible = true;
-        start();
+        }, { threshold: 0 }).observe(row);
       }
     });
   }

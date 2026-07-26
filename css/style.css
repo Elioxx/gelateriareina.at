@@ -119,6 +119,7 @@ p { margin: 0 0 1em; }
 }
 .header.is-scrolled { border-bottom-color: var(--c-line); }
 .header-inner {
+  position: relative;
   width: min(1120px, 100% - 2rem);
   margin-inline: auto;
   min-height: 68px;
@@ -131,18 +132,26 @@ p { margin: 0 0 1em; }
 .logo-sub { font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; color: var(--c-gold-deep); }
 
 .nav {
-  position: fixed;
-  inset: 68px 0 auto 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: var(--c-bg);
   border-bottom: 1px solid var(--c-line);
   display: flex;
   flex-direction: column;
   padding: .6rem 1.25rem 1.2rem;
-  transform: translateY(-110%);
-  transition: transform .3s ease;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
   box-shadow: var(--shadow-lg);
 }
-.nav.is-open { transform: translateY(0); }
+.nav.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
 .nav a {
   padding: .85rem .2rem;
   font-weight: 500;
@@ -186,6 +195,8 @@ p { margin: 0 0 1em; }
     border: 0;
     box-shadow: none;
     transform: none;
+    opacity: 1;
+    pointer-events: auto;
   }
   .nav a { border: 0; padding: .4rem 0; }
   .nav-toggle { display: none; }
@@ -430,6 +441,79 @@ p { margin: 0 0 1em; }
 .actionbar-btn + .actionbar-btn { background: var(--c-gold-soft); color: var(--c-gold-deep); }
 .actionbar-btn svg { width: 18px; height: 18px; }
 @media (min-width: 860px) { .actionbar { display: none; } }
+
+/* ── Micro-Effects ──────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50%      { transform: rotate(-2deg) translateY(-7px); }
+}
+.hero-badge { animation: float 5s ease-in-out infinite; }
+
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-text > * { animation: heroIn .8s cubic-bezier(.22, .8, .3, 1) both; }
+.hero-text > *:nth-child(2) { animation-delay: .08s; }
+.hero-text > *:nth-child(3) { animation-delay: .16s; }
+.hero-text > *:nth-child(4) { animation-delay: .24s; }
+.hero-text > *:nth-child(5) { animation-delay: .32s; }
+.hero-media { animation: heroIn .9s .18s cubic-bezier(.22, .8, .3, 1) both; }
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+.about-highlight {
+  background: linear-gradient(100deg,
+    var(--c-gold-deep) 40%, #E3C98F 50%, var(--c-gold-deep) 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+@media (min-width: 760px) {
+  .nav a {
+    position: relative;
+    transition: color .2s ease;
+  }
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 100%;
+    bottom: -2px;
+    height: 2px;
+    background: var(--c-gold);
+    transition: right .28s ease;
+  }
+  .nav a:hover::after { right: 0; }
+}
+
+.menu-list li { transition: background .2s ease; border-radius: 8px; padding-inline: .4rem; }
+.menu-list li:hover { background: var(--c-gold-soft); }
+.menu-list .scoop { transition: transform .25s ease; }
+.menu-list li:hover .scoop { transform: scale(1.18) rotate(-8deg); }
+
+.contact-card, .menu-cat { transition: transform .3s ease, box-shadow .3s ease; }
+.contact-card:hover, .menu-cat:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.btn-primary, .actionbar-btn { position: relative; overflow: hidden; }
+.btn-primary::after, .actionbar-btn::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -80%;
+  width: 50%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .25), transparent);
+  transform: skewX(-20deg);
+  transition: left .55s ease;
+}
+.btn-primary:hover::after, .actionbar-btn:hover::after { left: 130%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge, .hero-text > *, .hero-media, .about-highlight { animation: none !important; }
+  .about-highlight { -webkit-text-fill-color: currentColor; }
+}
 
 /* ── Reveal-Animation ───────────────────────────────────────── */
 .reveal {

@@ -47,30 +47,32 @@
   };
 
   const updateStatus = () => {
-    if (!status || !statusText) return;
-    if (!inSeason(status)) {
-      status.classList.add('is-closed');
-      statusText.textContent = 'Winterpause – wir freuen uns auf die nächste Saison';
-      return;
-    }
-    const now = new Date();
-    const hours = OPENING_HOURS[now.getDay()];
-    if (!hours) {
-      status.classList.add('is-closed');
-      statusText.textContent = 'Heute geschlossen · ab Donnerstag wieder für euch da';
-      return;
-    }
-    const [from, to] = hours;
-    const h = now.getHours() + now.getMinutes() / 60;
-    if (h >= from && h < to) {
-      status.classList.remove('is-closed');
-      statusText.textContent = `Jetzt geöffnet · bis ${to}:00 Uhr`;
-    } else {
-      status.classList.add('is-closed');
-      statusText.textContent = h < from
-        ? `Heute ab ${from}:00 Uhr geöffnet`
-        : 'Heute geschlossen · morgen ab 10:00 Uhr';
-    }
+    try {
+      if (!status || !statusText) return;
+      if (!inSeason(status)) {
+        status.classList.add('is-closed');
+        statusText.textContent = 'Winterpause – wir freuen uns auf die nächste Saison';
+        return;
+      }
+      const now = new Date();
+      const hours = OPENING_HOURS[now.getDay()];
+      if (!hours) {
+        status.classList.add('is-closed');
+        statusText.textContent = 'Heute geschlossen · ab Donnerstag wieder für euch da';
+        return;
+      }
+      const [from, to] = hours;
+      const h = now.getHours() + now.getMinutes() / 60;
+      if (h >= from && h < to) {
+        status.classList.remove('is-closed');
+        statusText.textContent = `Jetzt geöffnet · bis ${to}:00 Uhr`;
+      } else {
+        status.classList.add('is-closed');
+        statusText.textContent = h < from
+          ? `Heute ab ${from}:00 Uhr geöffnet`
+          : 'Heute geschlossen · morgen ab 10:00 Uhr';
+      }
+    } catch (_) { /* Fallback-Text aus dem HTML bleibt stehen */ }
   };
   updateStatus();
 

@@ -117,6 +117,18 @@ Größe und als `-900`-Variante fürs Handy. Ausgeliefert wird über `srcset`.
 | `galerie-uebergabe.webp`      | Galerie `--small`                | 3:2 quer |
 | `galerie-schlange.webp`       | Galerie `--small`                | 3:2 quer |
 
+### Vitrinen-Fotos (Eissorten)
+Die 15 Sortenfotos liegen unter `assets/images/vitrine/` – quadratisch 1:1,
+je als `NAME.webp` (1600px) und `NAME-900.webp` (900px). Die PNG-Rohdateien
+(1024×1024, generiert via OpenRouter `google/gemini-2.5-flash-image`) liegen
+in `assets/images/vitrine-src/` und bleiben als Quelle erhalten.
+
+Neue Sorte oder Austausch eines Bildes:
+```sh
+python3 tools/generate_vitrine.py SORTENNAME   # einzeln, sonst alle 15
+```
+Danach beide WebP-Größen erzeugen und im HTML eine `.vitrine-card` ergänzen.
+
 Neues Foto aus einem JPG erzeugen – **beide** Größen:
 ```sh
 ffmpeg -i FOTO.jpg -vf "scale=1600:-2" -frames:v 1 \

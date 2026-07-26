@@ -83,7 +83,7 @@
 
   /* ── Reveal-Animation ───────────────────────────────────── */
   const revealTargets = document.querySelectorAll(
-    '.section-head, .menu-cat, .about-media, .about-text, .gallery-item, .contact-card, .extras'
+    '.section-head, .vitrine-cat, .vitrine-card, .about-media, .about-text, .gallery-item, .contact-card, .extras'
   );
   if ('IntersectionObserver' in window) {
     revealTargets.forEach((el) => el.classList.add('reveal'));

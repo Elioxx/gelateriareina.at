@@ -117,15 +117,21 @@ Größe und als `-900`-Variante fürs Handy. Ausgeliefert wird über `srcset`.
 | `galerie-uebergabe.webp`      | Galerie `--small`                | 3:2 quer |
 | `galerie-schlange.webp`       | Galerie `--small`                | 3:2 quer |
 
-### Vitrinen-Fotos (Eissorten)
-Die 15 Sortenfotos liegen unter `assets/images/vitrine/` – quadratisch 1:1,
-je als `NAME.webp` (1600px) und `NAME-900.webp` (900px). Die PNG-Rohdateien
+### Vitrinen-Fotos (Eissorten, V2)
+Die 15 Sortenfotos liegen unter `assets/images/vitrine-v2/` – quadratisch 1:1,
+je als `NAME.webp` (1600px) und `NAME-900.webp` (900px). Stil: randlose
+Draufsicht, Eis füllt den ganzen Frame, Topping = die Zutat. Die PNG-Rohdateien
 (1024×1024, generiert via OpenRouter `google/gemini-2.5-flash-image`) liegen
-in `assets/images/vitrine-src/` und bleiben als Quelle erhalten.
+in `assets/images/vitrine-v2-src/` und bleiben als Quelle erhalten.
+
+Die schwarzen Sorten-Schilder sind **kein Teil der Bilder**, sondern ein
+einheitliches CSS-Overlay (`.vitrine-sign` in style.css) – so ist die Form
+überall identisch und der Text immer korrekt.
 
 Neue Sorte oder Austausch eines Bildes:
 ```sh
-python3 tools/generate_vitrine.py SORTENNAME   # einzeln, sonst alle 15
+python3 tools/generate_vitrine_v2.py SORTENNAME          # einzeln
+python3 tools/generate_vitrine_v2.py --with-ref NAME...  # mit Pistazie als Stil-Referenz
 ```
 Danach beide WebP-Größen erzeugen und im HTML eine `.vitrine-card` ergänzen.
 

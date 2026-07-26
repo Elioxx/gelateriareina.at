@@ -257,75 +257,97 @@ p { margin: 0 0 1em; }
   .hero-media { order: 2; }
 }
 
-/* ── Vitrine ────────────────────────────────────────────────── */
-.vitrine-cats { display: grid; gap: clamp(2.2rem, 5vw, 3.2rem); }
+/* ── Vitrine (randlos, Eis an Eis, Schild-Overlays) ─────────── */
+/* Mobile first: horizontale Wisch-Reihe pro Kategorie. Die
+   Kacheln liegen mit duennem Metall-Spalt aneinander — wie die
+   Naepfe in der echten Auslage. */
+.vitrine-cats { display: grid; gap: clamp(2rem, 5vw, 3rem); }
 .vitrine-cat h3 { margin-bottom: .15rem; }
-.vitrine-cat-sub { font-size: .88rem; color: var(--c-muted); margin-bottom: 1.1rem; }
+.vitrine-cat-sub { font-size: .88rem; color: var(--c-muted); margin-bottom: .9rem; }
 
 .vitrine-row {
   display: flex;
-  gap: .9rem;
+  gap: 3px;
+  background: #C9BBA6;              /* Metall-Spalt zwischen den Naepfen */
+  border: 3px solid #C9BBA6;
+  border-radius: 10px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding: .2rem .2rem 1rem;
   scrollbar-width: none;
+  box-shadow: var(--shadow);
 }
 .vitrine-row::-webkit-scrollbar { display: none; }
 
 .vitrine-card {
-  flex: 0 0 62%;
-  max-width: 240px;
-  scroll-snap-align: start;
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
-  border-radius: var(--radius);
+  position: relative;
+  flex: 0 0 58%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: transform .3s ease, box-shadow .3s ease;
+  scroll-snap-align: start;
+  background: var(--c-alt);
 }
-.vitrine-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-
-.vitrine-media { aspect-ratio: 1 / 1; overflow: hidden; background: var(--c-alt); }
-.vitrine-media img {
+.vitrine-card img {
   width: 100%; height: 100%;
   object-fit: cover;
+  display: block;
   transform: scale(1.06);
   transition: transform .8s cubic-bezier(.22, .8, .3, 1);
 }
-.vitrine-card.is-visible .vitrine-media img { transform: scale(1); }
-.vitrine-card:hover .vitrine-media img { transform: scale(1.04); }
+.vitrine-card.is-visible img { transform: scale(1); }
 
-.vitrine-info { padding: .9rem 1rem 1.05rem; position: relative; }
-.vitrine-info strong {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: 1.06rem;
-  letter-spacing: -.01em;
-}
-.vitrine-info small { display: block; color: var(--c-muted); font-size: .82rem; line-height: 1.45; margin-top: .2rem; }
-.vitrine-info em {
+/* Schwarzes Laden-Schild — einheitliche Form, Text als Overlay */
+.vitrine-sign {
   position: absolute;
-  top: .95rem; right: 1rem;
-  font-style: normal;
-  font-size: .62rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--c-gold-deep);
-  border: 1px solid var(--c-gold);
-  border-radius: 999px;
-  padding: .14rem .5rem;
+  left: 50%; top: 10px;
+  transform: translateX(-50%) rotate(-1.5deg);
+  background: #17110D;
+  color: #F5EFE4;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: .82rem;
+  letter-spacing: .03em;
+  padding: .28em .85em .32em;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .35);
+  white-space: nowrap;
+  pointer-events: none;
 }
-.dot {
-  flex: 0 0 12px;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: var(--scoop, var(--c-gold-soft));
-  border: 1px solid rgba(33, 26, 20, .14);
+.vitrine-sign::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 100%;
+  transform: translateX(-50%);
+  width: 2px; height: 9px;
+  background: linear-gradient(#A8A8A8, #6E6E6E);
+}
+
+/* vegan-Badge dezent in der Ecke */
+.vitrine-vegan {
+  position: absolute;
+  right: 7px; bottom: 7px;
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #3E633E;
+  background: rgba(255, 255, 255, .88);
+  border-radius: 999px;
+  padding: .18rem .5rem;
+  pointer-events: none;
+}
+
+/* Sorten-Beschreibung unter dem Schild als Tooltip-Ersatz:
+   kleine Zeile am unteren Bildrand, dunkel hinterlegt */
+.vitrine-desc {
+  position: absolute;
+  left: 7px; bottom: 7px;
+  max-width: 70%;
+  font-size: .62rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, .92);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+  pointer-events: none;
 }
 
 @media (min-width: 720px) {
@@ -333,13 +355,9 @@ p { margin: 0 0 1em; }
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     overflow: visible;
-    padding: 0;
-    gap: 1.1rem;
   }
-  .vitrine-card { flex: none; max-width: none; }
-}
-@media (min-width: 720px) and (max-width: 980px) {
-  .vitrine-row { grid-template-columns: repeat(3, 1fr); }
+  .vitrine-card { flex: none; }
+  .vitrine-sign { font-size: .95rem; }
 }
 
 .extras {
@@ -564,7 +582,7 @@ p { margin: 0 0 1em; }
 .vitrine-card:nth-child(5) { transition-delay: .24s; }
 @media (prefers-reduced-motion: reduce) {
   .vitrine-card { transition-delay: 0s !important; }
-  .vitrine-media img, .vitrine-card.is-visible .vitrine-media img, .vitrine-card:hover .vitrine-media img { transform: none; transition: none; }
+  .vitrine-card img, .vitrine-card.is-visible img { transform: none; transition: none; }
 }
 
 .gallery-item img { transform: scale(1.08); transition: transform 1.1s cubic-bezier(.22, .8, .3, 1); }

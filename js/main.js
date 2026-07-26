@@ -1,327 +1,103 @@
-/**
- * main.js — Navigation, Scroll-Verhalten, Mobile-Menü, Öffnungsstatus.
- * Läuft nach DOMContentLoaded. Keine Abhängigkeiten.
- */
+/* Gelateria Reina — Nav, Öffnungsstatus, Galerie-Reveal */
+(() => {
+  'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-  initHeader();
-  initMobileNav();
-  initNavHighlight();
-  initRevealOnScroll();
-  initOpeningStatus();
-  initMap();
-  initGalleryDots();
-  initActionBar();
-});
-
-/* --- Galerie-Punkte ---
-   Am Handy ist die Galerie ein Wisch-Karussell (scroll-snap, siehe
-   css/about.css). Die Punkte zeigen, wo man darin steht — ohne sie
-   sieht man nicht, dass es überhaupt weitergeht.
-
-   Bewusst nur Anzeige, nicht bedienbar: als Tap-Ziele wären die
-   Punkte zu klein, und gewischt wird ohnehin direkt am Bild.
-   Ab 640px blendet das CSS die Punkte aus; der Scroll-Listener
-   läuft dann ins Leere, was billiger ist als ihn zu verwalten. */
-function initGalleryDots() {
-  const track = document.getElementById('gallery-grid');
-  const dots  = document.getElementById('gallery-dots');
-  if (!track || !dots) return;
-
-  const items = Array.from(track.children);
-  if (items.length < 2) return;
-
-  items.forEach(() => {
-    const dot = document.createElement('span');
-    dot.className = 'gallery-dot';
-    dots.appendChild(dot);
-  });
-
-  const marks = Array.from(dots.children);
-
-  const sync = () => {
-    // Das Bild, dessen linke Kante der Scroll-Position am nächsten
-    // liegt, gilt als das aktuelle.
-    let nearest = 0;
-    let best = Infinity;
-    items.forEach((item, i) => {
-      const d = Math.abs(item.offsetLeft - track.scrollLeft - track.clientLeft);
-      if (d < best) { best = d; nearest = i; }
-    });
-    marks.forEach((m, i) => m.classList.toggle('is-active', i === nearest));
-  };
-
-  track.addEventListener('scroll', sync, { passive: true });
-  sync();
-}
-
-/* --- Aktionsbalken (nur Handy) ---
-   Zwei Flächen unten: anrufen und Route. Erscheint erst, wenn der
-   Hero durch ist — darüber stünde er nur im Weg, und ganz oben ist
-   ohnehin schon der Öffnungsstatus zu sehen.
-   Styling und Ausblenden ab 900px: css/mobile.css */
-function initActionBar() {
-  const bar  = document.getElementById('action-bar');
-  const hero = document.getElementById('home');
-  if (!bar || !hero) return;
-
-  if (!('IntersectionObserver' in window)) { bar.classList.add('is-visible'); return; }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      // Sichtbar, sobald der Hero oben aus dem Blick gescrollt ist.
-      bar.classList.toggle('is-visible', !entry.isIntersecting);
-    });
-  }, { rootMargin: '-40% 0px 0px 0px' });
-
-  observer.observe(hero);
-}
-
-/* --- Karte ---
-   Die OSM-Einbettung misst ihre Kachelfläche einmal beim Erzeugen des
-   Dokuments und danach nie wieder — weder beim Neuladen noch beim
-   Größenwechsel. Wird das Iframe zu früh erzeugt, steht die endgültige
-   Rasterbreite noch nicht fest und die Karte bleibt auf halber Breite
-   in der Ecke stehen. Deshalb setzen wir src erst, wenn die Karte in
-   den Blick kommt: dann ist das Layout fertig.
-   Ohne JavaScript bleibt der Link „Größere Karte" unter der Karte. */
-function initMap() {
-  const frame = document.querySelector('.map-frame[data-src]');
-  if (!frame) return;
-
-  const load = () => {
-    if (frame.src) return;
-    frame.src = frame.dataset.src;
-  };
-
-  if (!('IntersectionObserver' in window)) { load(); return; }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      observer.unobserve(entry.target);
-      // Ein Frame warten, damit Breite und Höhe sicher stehen
-      requestAnimationFrame(load);
-    });
-  }, { rootMargin: '200px' });
-
-  observer.observe(frame);
-}
-
-/* --- Sticky Header --- */
-function initHeader() {
-  const header = document.getElementById('site-header');
-  if (!header) return;
-
-  const onScroll = () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
+  /* ── Header: Scroll-Zustand ─────────────────────────────── */
+  const header = document.getElementById('header');
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
   onScroll();
-}
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-/* --- Mobile Navigation --- */
-function initMobileNav() {
+  /* ── Mobile Navigation ──────────────────────────────────── */
   const toggle = document.getElementById('nav-toggle');
-  const mobileNav = document.getElementById('nav-mobile');
-  const closeBtn = document.getElementById('nav-mobile-close');
-
-  if (!toggle || !mobileNav) return;
-
-  const open = () => {
-    mobileNav.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    toggle.setAttribute('aria-expanded', 'true');
-    closeBtn?.focus();
-  };
-
-  const close = () => {
-    mobileNav.classList.remove('open');
-    document.body.style.overflow = '';
-    toggle.setAttribute('aria-expanded', 'false');
-  };
-
-  toggle.addEventListener('click', open);
-  closeBtn?.addEventListener('click', close);
-
-  mobileNav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', close);
+  const nav = document.getElementById('nav');
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+  });
+  nav.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
   });
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') close();
+  /* ── Öffnungszeiten / Status ────────────────────────────── */
+  // 0 = Sonntag … 6 = Samstag; null = geschlossen
+  const OPENING_HOURS = {
+    0: [10, 18], // So
+    1: null, 2: null, 3: null,
+    4: [10, 18], // Do
+    5: [10, 18], // Fr
+    6: [10, 18], // Sa
+  };
+
+  const status = document.getElementById('hero-status');
+  const statusText = document.getElementById('hero-status-text');
+
+  const inSeason = (el) => {
+    const from = el.dataset.seasonFrom;
+    const to = el.dataset.seasonTo;
+    if (!from || !to) return true;
+    const now = new Date();
+    const mmdd = (d) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const today = mmdd(now);
+    return from <= to ? (today >= from && today <= to) : (today >= from || today <= to);
+  };
+
+  const updateStatus = () => {
+    if (!status || !statusText) return;
+    if (!inSeason(status)) {
+      status.classList.add('is-closed');
+      statusText.textContent = 'Winterpause – wir freuen uns auf die nächste Saison';
+      return;
+    }
+    const now = new Date();
+    const hours = OPENING_HOURS[now.getDay()];
+    if (!hours) {
+      status.classList.add('is-closed');
+      statusText.textContent = 'Heute geschlossen · ab Donnerstag wieder für euch da';
+      return;
+    }
+    const [from, to] = hours;
+    const h = now.getHours() + now.getMinutes() / 60;
+    if (h >= from && h < to) {
+      status.classList.remove('is-closed');
+      statusText.textContent = `Jetzt geöffnet · bis ${to}:00 Uhr`;
+    } else {
+      status.classList.add('is-closed');
+      statusText.textContent = h < from
+        ? `Heute ab ${from}:00 Uhr geöffnet`
+        : 'Heute geschlossen · morgen ab 10:00 Uhr';
+    }
+  };
+  updateStatus();
+
+  /* ── Heute-Zeile in der Öffnungszeiten-Tabelle ──────────── */
+  const today = String(new Date().getDay());
+  document.querySelectorAll('.hours tr[data-days]').forEach((row) => {
+    if (row.dataset.days.split(',').includes(today)) row.classList.add('is-today');
   });
-}
 
-/* --- Aktiver Nav-Link beim Scrollen --- */
-function initNavHighlight() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-  if (!sections.length || !navLinks.length) return;
-
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const id = entry.target.getAttribute('id');
-        navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-        });
-      });
-    },
-    { rootMargin: '-40% 0px -55% 0px' }
+  /* ── Reveal-Animation ───────────────────────────────────── */
+  const revealTargets = document.querySelectorAll(
+    '.section-head, .menu-cat, .about-media, .about-text, .gallery-item, .contact-card, .extras'
   );
-
-  sections.forEach(s => observer.observe(s));
-}
-
-/* --- Einblenden beim Scrollen --- */
-function initRevealOnScroll() {
-  const els = document.querySelectorAll('[data-reveal]');
-  if (!els.length) return;
-
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
+  if ('IntersectionObserver' in window) {
+    revealTargets.forEach((el) => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
         }
       });
-    },
-    { threshold: 0.1 }
-  );
-
-  els.forEach(el => observer.observe(el));
-}
-
-/* =========================================================
-   Öffnungsstatus
-
-   Beantwortet die Frage, mit der die meisten Besucher kommen:
-   „Kann ich jetzt hin?" Gerechnet wird immer in Wiener Zeit —
-   sonst zeigt ein Handy im Urlaub etwas Falsches an.
-
-   Öffnungszeiten ändern: unten in OPENING_HOURS eintragen UND
-   in index.html (#kontakt + Footer) sowie data/info.json.
-   ========================================================= */
-
-/* Index = Wochentag (0 = Sonntag). null bedeutet geschlossen,
-   sonst [Öffnung, Schließung] in vollen Stunden. */
-const OPENING_HOURS = [
-  [10, 18],  // Sonntag
-  null,      // Montag
-  null,      // Dienstag
-  null,      // Mittwoch
-  [10, 18],  // Donnerstag
-  [10, 18],  // Freitag
-  [10, 18]   // Samstag
-];
-
-const WEEKDAY_NAMES = [
-  'Sonntag', 'Montag', 'Dienstag', 'Mittwoch',
-  'Donnerstag', 'Freitag', 'Samstag'
-];
-
-function initOpeningStatus() {
-  const el = document.getElementById('hero-status');
-  const now = viennaTime();
-  if (!now) return;
-
-  // Saisonbetrieb: greift nur, wenn in index.html ein Zeitraum
-  // hinterlegt ist (data-season-from / data-season-to, je "MM-TT").
-  // Ohne Angabe wird ganzjährig nach OPENING_HOURS gerechnet.
-  const outOfSeason = el && isOutOfSeason(el.dataset.seasonFrom, el.dataset.seasonTo, now);
-
-  if (el) {
-    const status = outOfSeason
-      ? { open: false, text: 'Winterpause – wir sind bald wieder für euch da' }
-      : describeStatus(now);
-
-    el.textContent = status.text;
-    el.classList.toggle('is-open', status.open);
-    el.classList.toggle('is-closed', !status.open);
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealTargets.forEach((el) => io.observe(el));
   }
 
-  // Heutige Zeile in der Öffnungszeiten-Tabelle hervorheben
-  document.querySelectorAll('.hours-row[data-days]').forEach(row => {
-    const days = row.dataset.days.split(',').map(Number);
-    row.classList.toggle('is-today', !outOfSeason && days.includes(now.day));
-  });
-}
-
-/* Aktuelle Zeit in Europe/Vienna, unabhängig von der Geräte-Zeitzone */
-function viennaTime() {
-  try {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Europe/Vienna',
-      weekday: 'short',
-      month: '2-digit',
-      day: '2-digit',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: false
-    }).formatToParts(new Date());
-
-    const get = type => parts.find(p => p.type === type)?.value;
-    const dayIndex = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-
-    return {
-      day: dayIndex[get('weekday')],
-      // hour12:false liefert je nach Engine 24 statt 0 um Mitternacht
-      hour: parseInt(get('hour'), 10) % 24,
-      minute: parseInt(get('minute'), 10),
-      month: parseInt(get('month'), 10),
-      date: parseInt(get('day'), 10)
-    };
-  } catch {
-    return null;  // Intl nicht verfügbar → Status bleibt wie im HTML
-  }
-}
-
-function describeStatus(now) {
-  const today = OPENING_HOURS[now.day];
-  const minutesNow = now.hour * 60 + now.minute;
-
-  if (today) {
-    const [from, to] = today;
-    if (minutesNow < from * 60) {
-      return { open: false, text: `Heute ab ${from} Uhr geöffnet` };
-    }
-    if (minutesNow < to * 60) {
-      return { open: true, text: `Jetzt geöffnet · bis ${to} Uhr` };
-    }
-  }
-
-  // Nächsten offenen Tag suchen (max. eine Woche voraus)
-  for (let step = 1; step <= 7; step++) {
-    const day = (now.day + step) % 7;
-    const hours = OPENING_HOURS[day];
-    if (!hours) continue;
-
-    const when = step === 1 ? 'morgen' : `am ${WEEKDAY_NAMES[day]}`;
-    return { open: false, text: `Heute geschlossen · ${when} ab ${hours[0]} Uhr` };
-  }
-
-  return { open: false, text: 'Aktuell geschlossen' };
-}
-
-/* "MM-TT"-Zeitraum, der über den Jahreswechsel gehen darf */
-function isOutOfSeason(from, to, now) {
-  if (!from || !to) return false;
-
-  const toNum = value => {
-    const [m, d] = String(value).split('-').map(Number);
-    return Number.isFinite(m) && Number.isFinite(d) ? m * 100 + d : null;
-  };
-
-  const start = toNum(from);
-  const end = toNum(to);
-  const today = now.month * 100 + now.date;
-  if (start === null || end === null) return false;
-
-  return start <= end
-    ? today < start || today > end      // Saison innerhalb eines Jahres
-    : today < start && today > end;     // Saison über den Jahreswechsel
-}
+  /* ── Jahr im Footer ─────────────────────────────────────── */
+  const year = document.getElementById('year');
+  if (year) year.textContent = String(new Date().getFullYear());
+})();

@@ -12,36 +12,34 @@ entworfen, Desktop ist die Erweiterung. Details in `css/CLAUDE.md`.
 
 ```
 /
-├── index.html          # Einzige HTML-Datei, alle Sections, keine Templates
+├── index.html            # Startseite, alle Sections
+├── impressum.html        # Impressum (eigene Seite, §5 ECG)
+├── datenschutz.html      # Datenschutzerklärung (DSGVO, Meta Ads, EU-Hosting)
 ├── css/
-│   ├── base.css        # ZUERST laden: CSS-Variablen, Reset, Typografie, Buttons, Utils
-│   ├── ornaments.css   # Das gezeichnete Gold: .ink-System und Zeichenbewegung
-│   ├── layout.css      # Header, Navigation, Footer
-│   ├── hero.css        # Hero-Section (weiße Bühne, Foto im Bogen)
-│   ├── menu.css        # Speisekarte („Vitrine": Wisch-Tabs + Sortenliste)
-│   ├── about.css       # Über-uns, Zitat-Band und Galerie
-│   ├── video.css       # Video-Section mit Click-to-Play-Fassade
-│   ├── contact.css     # Kontakt & Öffnungszeiten
-│   └── mobile.css      # ZULETZT laden: Aktionsbalken (nur Handy)
+│   ├── fonts.css         # @font-face: Fraunces + Inter (selbst gehostet, kein Google)
+│   ├── style.css         # Alle Styles (Reset, Header, Hero, Vitrine, About, Galerie, Kontakt, Footer)
+│   └── impressum.css     # Impressum-Layout (nur impressum.html)
 ├── js/
-│   ├── main.js         # Nav, Scroll, Reveal, Öffnungsstatus, Galerie-Punkte, Aktionsbalken
-│   ├── menu.js         # Lädt data/menu.json und rendert die Speisekarte
-│   └── video.js        # Tauscht die Video-Fassade beim Klick gegen den Player
+│   ├── config-loader.js  # Lädt data/config.json → setzt Meta-Tags (OG, Title, Canonical)
+│   ├── main.js           # Nav, Scroll, Reveal, Öffnungsstatus, Galerie-Punkte, Aktionsbalken
+│   ├── menu.js           # Lädt data/menu.json und rendert die Speisekarte
+│   └── video.js          # Tauscht die Video-Fassade beim Klick gegen den Player
 ├── data/
-│   ├── menu.json       # Eissorten inkl. Kugelfarbe (Quelle für menu.js)
-│   └── info.json       # Adresse, Öffnungszeiten, Kontakt (Referenz; HTML ist statisch)
-└── assets/
-    └── images/         # Fotos (WebP, je in voller Größe und als -900 fürs Handy)
+│   ├── config.json       # Konfiguration: site.title, meta, openGraph, social
+│   ├── menu.json         # Eissorten inkl. Kugelfarbe (Quelle für menu.js)
+│   └── info.json         # Adresse, Öffnungszeiten, Kontakt (Referenz; HTML ist statisch)
+├── assets/
+│   ├── fonts/            # woff2-Dateien (Fraunces, Inter) – selbst gehostet
+│   └── images/           # Fotos (WebP) + vitrine-v2/ (Sortenfotos)
+└── tools/
+    ├── preview-server.py # No-Cache-HTTP-Server für lokale Vorschau (Port 8917)
+    └── generate_vitrine_v2.py
 ```
 
-**Wichtige Regel:** `css/base.css` definiert alle CSS Custom Properties (`--c-*`,
-`--f-*`, `--space-*`, `--tap`). Alle anderen CSS-Dateien setzen base.css voraus.
-`ornaments.css` kommt direkt danach (das System nutzen alle Sections),
-`mobile.css` bleibt das letzte Stylesheet. Ladereihenfolge nicht ändern.
-
-**Schriften** werden in `index.html` per `<link>` geladen, nicht per `@import` in
-der CSS – ein `@import` in der ersten Datei kostet eine zusätzliche Rundreise vor
-dem ersten Rendern.
+**Wichtige Regel:** `css/style.css` definiert alle CSS Custom Properties (`--c-*`,
+`--f-*`, `--space-*`, `--tap`). `css/fonts.css` wird VOR style.css geladen,
+damit die Schriftarten beim ersten Rendern bereitstehen. Alle Schriften sind
+lokal gehostet – kein Google Fonts, kein externer Request.
 
 ## Sections in index.html (Reihenfolge)
 
@@ -234,6 +232,20 @@ Seite unsichtbar, falls ein Skript nicht lädt.
 Animationen mit Endzustand (Hero-Zoom, Auftritt, Puls) zusätzlich in `hero.css`,
 die Zeichenbewegung zusätzlich in `ornaments.css`. Wer dort etwas ergänzt, muss
 es in den jeweiligen Block mit eintragen.
+
+## Konfiguration (Meta-Tags)
+
+`data/config.json` steuert Titel, Description, Open Graph, Twitter Card und
+Canonical-URL. Alles was dort geändert wird, wird von `js/config-loader.js`
+automatisch in die Meta-Tags gespielt. Die statischen HTML-Tags dienen als
+Fallback, falls das JS nicht laden sollte.
+
+## Impressum
+
+Das Impressum liegt auf einer **eigenen Seite** (`impressum.html`) mit eigenem
+Header und Footer. Der Link in der Fußnavigation zeigt dorthin. Die Seite ist
+identisch zur Startseite gestylt. Inhalt nach §5 ECG anpassen (UID,
+Gewerbebehörde, etc.).
 
 ## Deployment
 

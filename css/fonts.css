@@ -1,0 +1,21 @@
+/* ═══════════════════════════════════════════════════════════════
+   Gelateria Reina — Selbst gehostete Schriften
+   Fraunces (Display) + Inter (Body) — Latin Subset, Variable Fonts
+   Lädt nichts von Google-Drittanbietern.
+   ═══════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('../assets/fonts/fraunces-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+}

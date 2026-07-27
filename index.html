@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gelateria Reina · Hausgemachtes Eis in Gleisdorf</title>
 <meta name="description" content="Gelateria Reina in Gleisdorf – täglich frisch zubereitetes Gelato nach traditionellen italienischen Rezepturen. Klassiker, Fruchtsorten und Spezialitäten. Täglich geöffnet ab 11 bzw. 12 Uhr.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/cookie.css">
 <link rel="stylesheet" href="css/style.css">
+<script src="js/config-loader.js" defer></script>
 </head>
 <body>
 
@@ -314,6 +314,8 @@
       <a href="#ueber-uns">Über uns</a>
       <a href="#galerie">Galerie</a>
       <a href="#kontakt">Kontakt</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
     </nav>
     <p class="footer-legal">© <span id="year">2026</span> Gelateria Reina · Weizer Straße 4, 8200 Gleisdorf</p>
   </div>
@@ -331,6 +333,22 @@
   </a>
 </div>
 
+<!-- ══════════ COOKIE-BANNER ══════════ -->
+<aside class="cookie-banner" id="cookie-banner" role="alert" aria-live="polite">
+  <div class="cookie-banner-inner">
+    <p class="cookie-banner-text">
+      Diese Website verwendet Cookies und Technologien von Meta (Facebook)
+      für personalisierte Werbung. Mit Klick auf „Akzeptieren" stimmen Sie
+      der Verarbeitung Ihrer Daten zu. <a href="datenschutz.html">Mehr erfahren</a>
+    </p>
+    <div class="cookie-actions">
+      <button class="cookie-btn cookie-btn-reject" id="cookie-reject" type="button">Ablehnen</button>
+      <button class="cookie-btn cookie-btn-accept" id="cookie-accept" type="button">Akzeptieren</button>
+    </div>
+  </div>
+</aside>
+
+<script src="js/cookie.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

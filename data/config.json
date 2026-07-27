@@ -1,0 +1,27 @@
+{
+  "site": {
+    "title": "Gelateria Reina · Hausgemachtes Eis in Gleisdorf",
+    "description": "Gelateria Reina in Gleisdorf – täglich frisch zubereitetes Gelato nach traditionellen italienischen Rezepturen. Klassiker, Fruchtsorten und Spezialitäten. Täglich geöffnet ab 11 bzw. 12 Uhr.",
+    "language": "de",
+    "url": "https://gelateriareina.at"
+  },
+  "meta": {
+    "author": "Gelateria Reina",
+    "robots": "index, follow",
+    "geo_region": "AT-6",
+    "geo_placename": "Gleisdorf",
+    "geo_position": "47.108;15.708"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/GelateriaReina/"
+  },
+  "openGraph": {
+    "title": "Gelateria Reina – Hausgemachtes Eis in Gleisdorf",
+    "description": "Täglich frisch zubereitetes Gelato nach traditionellen italienischen Rezepturen.",
+    "image": "assets/images/hero-eisdiele-front.webp",
+    "image_width": "1600",
+    "image_height": "1067",
+    "type": "website",
+    "locale": "de_AT"
+  }
+}

@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gelateria Reina · Hausgemachtes Eis in Gleisdorf</title>
 <meta name="description" content="Gelateria Reina in Gleisdorf – täglich frisch zubereitetes Gelato nach traditionellen italienischen Rezepturen. Klassiker, Fruchtsorten und Spezialitäten. Täglich geöffnet ab 11 bzw. 12 Uhr.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/cookie.css">
 <link rel="stylesheet" href="css/style.css">
@@ -15,9 +18,18 @@
 <!-- ══════════ HEADER ══════════ -->
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="#home" class="logo">
-      <span class="logo-name">Gelateria Reina</span>
-      <span class="logo-sub">Gleisdorf</span>
+    <a href="#home" class="logo" aria-label="Gelateria Reina – zur Startseite">
+      <picture>
+        <source srcset="assets/images/logo-reina-400.webp 400w, assets/images/logo-reina-800.webp 800w"
+                sizes="(max-width: 480px) 200px, 260px"
+                type="image/webp">
+        <img src="assets/images/logo-reina-400.png"
+             srcset="assets/images/logo-reina-400.png 400w, assets/images/logo-reina-800.png 800w"
+             sizes="(max-width: 480px) 200px, 260px"
+             width="4539" height="922"
+             alt="Gelateria Reina"
+             class="logo-img">
+      </picture>
     </a>
     <nav class="nav" id="nav" aria-label="Hauptnavigation">
       <a href="#sorten">Sorten</a>
@@ -306,7 +318,13 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div>
-      <p class="footer-logo">Gelateria Reina</p>
+      <img src="assets/images/logo-reina-400.webp"
+           srcset="assets/images/logo-reina-400.webp 400w, assets/images/logo-reina-800.webp 800w"
+           sizes="220px"
+           width="4539" height="922"
+           alt="Gelateria Reina"
+           class="footer-logo-img"
+           loading="lazy">
       <p class="footer-sub">Hausgemachtes Eis aus Gleisdorf</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
